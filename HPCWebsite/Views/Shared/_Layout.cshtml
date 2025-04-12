@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="قالب Deerhost">
+    <meta name="keywords" content="Deerhost, unica, خلاقانه, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@ViewData["Title"] - ابر اصفهان</title>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap"
+          rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/static/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/static/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/static/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/static/css/flaticon.css" type="text/css">
+    <link rel="stylesheet" href="~/static/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/static/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/static/css/style.css" type="text/css" asp-append-version="true">
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas__menu__overlay"></div>
+    <div class="offcanvas__menu__wrapper">
+        <div class="canvas__close">
+            <span class="fa fa-times-circle-o"></span>
+        </div>
+        <div class="offcanvas__logo">
+            <a href="#"><img src="/static/img/logo.png" alt=""></a>
+        </div>
+        <nav class="offcanvas__menu mobile-menu">
+            <ul>
+                <li><a href="/">تماس با ما</a></li>
+                <li><a href="/">اخبار</a></li>
+                <li><a href="/">قیمت‌ها</a></li>
+                <li><a href="/">محصولات</a></li>
+                <li><a href="/">درباره ما</a></li>
+                <li class="active"><a href="/">خانه</a></li>
+            </ul>
+        </nav>
+
+        <div id="mobile-menu-wrap"></div>
+        <div class="offcanvas__auth">
+            <ul>
+                @* <li><a href="#"><span class="icon_chat_alt"></span> چت آنلاین</a></li> *@
+                <li><a href="/"><span class="fa fa-user"></span> ورود / ثبت‌نام</a></li>
+            </ul>
+        </div>
+        <div class="offcanvas__info">
+            <ul>
+                <li><span class="icon_phone"></span>03137932614</li>
+                <li><span class="fa fa-envelope"></span> sitenes.team@gmail.com</li>
+            </ul>
+        </div>
+    </div>
+    <!-- Offcanvas Menu End -->
+    <!-- Header Section Begin -->
+    <header class="header-section">
+        <div class="header__info">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="header__info-left">
+                            <ul>
+                                <li><span class="icon_phone"></span>03137932614</li>
+                                <li><span class="fa fa-envelope"></span> sitenes.team@gmail.com</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="header__info-right">
+                            <ul>
+                                @* <li><a href="#"><span class="icon_chat_alt"></span> چت آنلاین</a></li> *@
+                                <li><a href="#"><span class="fa fa-user"></span> ورود / ثبت‌نام</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2 col-md-3  col-4">
+                    <div class="header__logo">
+                        <a href="./index.html"><img src="/static/img/logo.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-10 col-md-9 col-8">
+                    <nav class="header__menu">
+                        <ul>
+                            <li><a href="/">تماس با ما</a></li>
+                            @* <li><a href="/">اخبار</a></li> *@
+                            @* <li><a href="/">قیمت‌ها</a></li> *@
+                            <li><a href="/">درباره ما</a></li>
+                            <li><a href="/">محصولات</a></li>
+                            <li class="active"><a href="/">خانه</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="canvas__open">
+                <span class="fa fa-bars"></span>
+            </div>
+        </div>
+    </header>
+    <!-- Header End -->
+
+
+    @RenderBody()
+
+
+    <!-- پاورقی -->
+    <footer class="footer-section">
+        <div class="footer__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="footer__top-call">
+                            <h5>نیاز به کمک دارید؟ با ما تماس بگیرید</h5>
+                            <h2>03137932614</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="footer__top-auth">
+                            <h5>همین حالا عضو شوید و یک ماه هاستینگ دلکسه رایگان دریافت کنید</h5>
+                            <a href="#" class="primary-btn">ورود</a>
+                            <a href="#" class="primary-btn sign-up">ثبت‌نام</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer__text set-bg" data-setbg="/static/img/footer-bg.png">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="footer__text-about">
+                            <div class="footer__logo">
+                                <a href="./index.html"><img src="/static/img/logo.png" alt=""></a>
+                            </div>
+                            <p>
+                                شرکت بیتا زر اندیش پارس
+                                از ایده تا اجرا، همراه شما هستیم
+                                طراحی و پیاده‌سازی سیستم‌های نرم‌افزاری و اتوماسیون های اداری با جدیدترین فناوری‌ها
+                            </p>
+                            <div class="footer__social">
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                                <a href="#"><i class="fa fa-youtube-play"></i></a>
+                                <a href="#"><i class="fa fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6">
+                        <div class="footer__text-widget">
+                            <h5>دسترسی سریع</h5>
+                            <ul>
+                                <li class="active"><a href="/">خانه</a></li>
+                                <li><a href="/">محصولات</a></li>
+                                <li><a href="/">تماس با ما</a></li>
+                                @* <li><a href="/">اخبار</a></li> *@
+                                @* <li><a href="/">قیمت‌ها</a></li> *@
+                                <li><a href="/">درباره ما</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 col-sm-6">
+                        <div class="footer__text-widget">
+                            <h5>هاستینگ</h5>
+                            <ul>
+                                <li><a href="#">هاست اشتراکی</a></li>
+                                <li><a href="#">هاست نمایندگی</a></li>
+                                <li><a href="#">سرور مجازی</a></li>
+                                <li><a href="#">سرور اختصاصی</a></li>
+                                <li><a href="#">هاست ابری</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="footer__text-widget">
+                            <h5>تماس با ما</h5>
+                            <ul class="footer__widget-info">
+                                <li>
+                                    دانشگاه اصفهان ، مرکز رشد و فناوری ، اتاق 17 <i class="fa fa-map-marker"> </i>
+                                    <br />
+                                    کدپستی : ۸۱۷۴۶۷۳۴۴۱ 
+                                </li>
+                                <li> 03137932614 <i class="fa fa-mobile"> </i> </li> 
+                                <li> sitenes.team@gmail.com <i class="fa fa-headphones"> </i> </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer__text-copyright">
+                    <p>
+                         کلیه حقوق <a href="https://sitenes.ir">برای شرکت بیتا زر اندیش پارس</a> محفوظ است
+                        &copy;
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- پایان پاورقی -->
+    <!-- Js Plugins -->
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery.slicknav.js"></script>
+    <script src="/static/js/owl.carousel.min.js"></script>
+    <script src="/static/js/main.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>
