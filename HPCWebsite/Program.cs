@@ -1,7 +1,16 @@
+using DataLayer;
+using Microsoft.EntityFrameworkCore;
+using Service;
+using ViewModel;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<Context>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.Configure<SmsConfiguration>(builder.Configuration.GetSection("SmsSettings"));
+builder.Services.AddHttpClient<ISmsService, SmsService>();
 
 var app = builder.Build();
 

@@ -1,0 +1,97 @@
+﻿<!doctype html>
+<html lang="fa" dir="ltr">
+
+<head>
+    <!-- META DATA -->
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="ساش - قالب مدیریت و داشبورد بوت‌استرپ ۵">
+    <meta name="author" content="فناوری‌های اسپرکو">
+    <meta name="keywords" content="مدیریت,داشبورد مدیریت,پنل مدیریت,قالب مدیریت,بوت‌استرپ,تمیز,داشبورد,مسطح,جی‌کوئری,مدرن,واکنش‌گرا,قالب‌های مدیریت پریمیوم,مدیریت واکنش‌گرا,رابط کاربری,کیت رابط کاربری">
+
+    <!-- FAVICON -->
+    <link rel="shortcut icon" type="image/x-icon" href="~/static/dashboard/images/brand/favicon.ico" />
+
+    <!-- TITLE -->
+    <title>@ViewData["Title"] - ابر اصفهان</title>
+    <!-- BOOTSTRAP CSS -->
+    <link id="style" href="~/static/dashboard/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- STYLE CSS -->
+    <link href="~/static/dashboard/css/style.css" rel="stylesheet" />
+    <link href="~/static/dashboard/css/dark-style.css" rel="stylesheet" />
+    <link href="~/static/dashboard/css/transparent-style.css" rel="stylesheet">
+    <link href="~/static/dashboard/css/skin-modes.css" rel="stylesheet" />
+
+    <!--- FONT-ICONS CSS -->
+    <link href="~/static/dashboard/css/icons.css" rel="stylesheet" />
+
+    <!-- COLOR SKIN CSS -->
+    <link id="theme" rel="stylesheet" type="text/css" media="all" href="~/static/dashboard/colors/color1.css" />
+
+</head>
+
+<body class="app sidebar-mini ltr login-img">
+
+    <!-- BACKGROUND-IMAGE -->
+    <div class="">
+
+        <!-- GLOABAL LOADER -->
+        <div id="global-loader">
+            <img src="~/static/dashboard/images/loader.svg" class="loader-img" alt="لودر">
+        </div>
+        <!-- /GLOABAL LOADER -->
+        <!-- PAGE -->
+        <div class="page">
+            <div class="">
+
+                <!-- CONTAINER OPEN -->
+                <div class="col col-login mx-auto mt-7">
+                    <div class="text-center login-logo">
+                        <a href="/"><img src="~/static/img/logo.png" class="header-brand-img" alt="لوگو"></a>
+                    </div>
+                </div>
+
+                <div class="container-login100">
+                    <div class="wrap-login100 p-6">
+
+
+    @RenderBody()
+
+
+                    </div>
+                </div>
+                <!-- CONTAINER CLOSED -->
+            </div>
+        </div>
+        <!-- End PAGE -->
+
+    </div>
+    <!-- BACKGROUND-IMAGE CLOSED -->
+    <!-- JQUERY JS -->
+    <script src="~/static/dashboard/js/jquery.min.js"></script>
+
+    <!-- BOOTSTRAP JS -->
+    <script src="~/static/dashboard/plugins/bootstrap/js/popper.min.js"></script>
+    <script src="~/static/dashboard/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- SHOW PASSWORD JS -->
+    <script src="~/static/dashboard/js/show-password.min.js"></script>
+
+    <!-- GENERATE OTP JS -->
+    @* <script src="~/static/dashboard/js/generate-otp.js"></script> *@
+
+    <!-- Perfect SCROLLBAR JS-->
+    <script src="~/static/dashboard/plugins/p-scroll/perfect-scrollbar.js"></script>
+
+    <!-- Color Theme js -->
+    <script src="~/static/dashboard/js/themeColors.js"></script>
+
+    <!-- CUSTOM JS -->
+    <script src="~/static/dashboard/js/custom.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

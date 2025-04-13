@@ -1,0 +1,40 @@
+﻿@model long
+@{
+    Layout = "_LoginLayout";
+    ViewData["Title"] = "کد ورود";
+}
+<form action="CheckCode" class="login100-form validate-form">
+    <span class="login100-form-title pb-5">
+        ورود
+    </span>
+    <div class="panel panel-primary">
+        <div class="tab-menu-heading">
+            <div class="tabs-menu1">
+                <!-- Tabs -->
+                <ul class="nav panel-tabs justify-content-end">
+                    @* <li class="mx-0"><a href="#tab5" class="active" data-bs-toggle="tab">ایمیل</a></li> *@
+                    <li class="mx-0"><a href="#tab6" class="active" data-bs-toggle="tab">کد ورود</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="active panel-body tabs-menu-body p-0 pt-5">
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab6">
+                    <div id="mobile-num" class="wrap-input100 validate-input input-group mb-4">
+                        <input type="hidden" name="mobile" value="@Model" />
+                        <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                            <i class="zmdi zmdi-email text-muted" aria-hidden="true"></i>
+                        </a>
+                        <input type="number" name="code" class="input100 border-start-0 form-control ms-0 no-spin" min="100000" max="1000000">
+                    </div>
+                    <div class="container-login100-form-btn ">
+                        <button type="submit" class="login100-form-btn btn-primary">
+                            تایید کد
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

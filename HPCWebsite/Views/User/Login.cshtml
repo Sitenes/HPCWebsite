@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "_LoginLayout";
+    ViewData["Title"] = "ورود / ثبت نام";
+}
+<form action="LoginCode" class="login100-form validate-form">
+    <span class="login100-form-title pb-5">
+        ورود
+    </span>
+    <div class="panel panel-primary">
+        <div class="tab-menu-heading">
+            <div class="tabs-menu1">
+                <!-- Tabs -->
+                <ul class="nav panel-tabs justify-content-end">
+                    @* <li class="mx-0"><a href="#tab5" class="active" data-bs-toggle="tab">ایمیل</a></li> *@
+                    <li class="mx-0"><a href="#tab6" class="active" data-bs-toggle="tab">موبایل</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="active panel-body tabs-menu-body p-0 pt-5">
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab6">
+                    <div id="mobile-num" class="wrap-input100 validate-input input-group mb-4">
+                        <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                            <span>+98</span>
+                        </a>
+                        <input type="number" name="mobile" class="input100 border-start-0 form-control ms-0 no-spin" min="9000000000" max="10000000000">
+                    </div>
+                    <span>توجه: با شماره موبایل ثبت‌شده وارد شوید تا کد یک بارمصرف دریافت کنید</span>
+                    <div class="container-login100-form-btn ">
+                        <button type="submit" class="login100-form-btn btn-primary">
+                            ارسال کد
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
