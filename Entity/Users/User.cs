@@ -22,7 +22,7 @@ namespace Entity.Users
         [Required]
         [MaxLength(11)]
         [RegularExpression(@"^09\d{9}$", ErrorMessage = "شماره موبایل معتبر نیست")]
-        public string Mobile { get; set; }
+        public long Mobile { get; set; }
 
         public string VerificationCode { get; set; }
         public DateTime? VerificationCodeExpiry { get; set; }

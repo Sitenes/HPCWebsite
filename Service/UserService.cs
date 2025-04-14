@@ -11,14 +11,14 @@ namespace Service
     public interface IUserService
     {
         Task<User?> GetByIdAsync(Guid id);
-        Task<User?> GetByMobileAsync(string mobile);
-        Task<bool> IsMobileUniqueAsync(string mobile, int? excludeId = null);
+        Task<User?> GetByMobileAsync(long mobile);
+        Task<bool> IsMobileUniqueAsync(long mobile, int? excludeId = null);
         Task<User> CreateAsync(User user);
         Task<User> UpdateAsync(User user);
         Task<bool> DeleteAsync(Guid id);
-        Task<string> GenerateVerificationCodeAsync(string mobile);
-        Task<bool> VerifyCodeAsync(string mobile, string code);
-        Task<User> LoginAsync(string mobile);
+        Task<string> GenerateVerificationCodeAsync(long mobile);
+        Task<bool> VerifyCodeAsync(long mobile, string code);
+        Task<User> LoginAsync(long mobile);
     }
 
     public class UserService : IUserService
@@ -42,12 +42,12 @@ namespace Service
             return await _context.Users.FindAsync(id);
         }
 
-        public async Task<User?> GetByMobileAsync(string mobile)
+        public async Task<User?> GetByMobileAsync(long mobile)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Mobile == mobile);
         }
 
-        public async Task<bool> IsMobileUniqueAsync(string mobile, int? excludeId = null)
+        public async Task<bool> IsMobileUniqueAsync(long mobile, int? excludeId = null)
         {
             return !await _context.Users.AnyAsync(u =>
                 u.Mobile == mobile &&
@@ -59,6 +59,8 @@ namespace Service
             if (!await IsMobileUniqueAsync(user.Mobile))
                 throw new InvalidOperationException("شماره موبایل تکراری است");
 
+            user.CreatedAt = DateTime.Now;
+            user.IsActive = false;
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return user;
@@ -84,7 +86,7 @@ namespace Service
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<string> GenerateVerificationCodeAsync(string mobile)
+        public async Task<string> GenerateVerificationCodeAsync(long mobile)
         {
             var user = await GetByMobileAsync(mobile);
             if (user == null)
@@ -103,7 +105,7 @@ namespace Service
             return code;
         }
 
-        public async Task<bool> VerifyCodeAsync(string mobile, string code)
+        public async Task<bool> VerifyCodeAsync(long mobile, string code)
         {
             var cachedCode = await _cacheService.GetAsync<string>($"verification_{mobile}");
             var user = await GetByMobileAsync(mobile);
@@ -121,7 +123,7 @@ namespace Service
             return false;
         }
 
-        public async Task<User> LoginAsync(string mobile)
+        public async Task<User> LoginAsync(long mobile)
         {
             var user = await GetByMobileAsync(mobile);
             if (user == null || !user.IsActive)

@@ -9,8 +9,8 @@ namespace Service
 {
     public interface ISmsService
     {
-        Task<bool> SendSmsAsync(string mobileNumber, string message);
-        Task<bool> SendVerificationCodeAsync(string mobileNumber, string code);
+        Task<bool> SendSmsAsync(long mobileNumber, string message);
+        Task<bool> SendVerificationCodeAsync(long mobileNumber, string code);
     }
 
     public class SmsService : ISmsService
@@ -24,14 +24,14 @@ namespace Service
             _config = config;
         }
 
-        public async Task<bool> SendSmsAsync(string mobileNumber, string message)
+        public async Task<bool> SendSmsAsync(long mobileNumber, string message)
         {
             try
             {
                 // ساخت درخواست برای ارسال SMS
                 var request = new SmsRequest
                 {
-                    ReceiverNumber = mobileNumber,
+                    ReceiverNumber = "0" + mobileNumber.ToString(),
                     Message = message,
                     ApiKey = _config.ApiKey,
                     SenderNumber = _config.SenderNumber
@@ -51,7 +51,7 @@ namespace Service
             }
         }
 
-        public async Task<bool> SendVerificationCodeAsync(string mobileNumber, string code)
+        public async Task<bool> SendVerificationCodeAsync(long mobileNumber, string code)
         {
             // ساخت متن پیام تایید
             var message = $"کد تایید شما: {code}\nاین کد تا 5 دقیقه معتبر است.";
