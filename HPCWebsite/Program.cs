@@ -11,6 +11,7 @@ builder.Services.AddDbContext<Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.Configure<SmsConfiguration>(builder.Configuration.GetSection("SmsSettings"));
 builder.Services.AddHttpClient<ISmsService, SmsService>();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
