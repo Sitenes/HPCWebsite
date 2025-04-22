@@ -86,6 +86,7 @@ h6 {
 	color: #111111;
 	font-weight: 400;
 	font-family: "VazirUI", sans-serif;
+	direction: rtl;
 }
 
 h1 {
@@ -1072,7 +1073,7 @@ ol {
 }
 
 .footer__top-auth h5 {
-	font-size: 20px;
+	font-size: 18px;
 	color: #ffffff;
 	font-weight: 700;
 	margin-bottom: 20px;

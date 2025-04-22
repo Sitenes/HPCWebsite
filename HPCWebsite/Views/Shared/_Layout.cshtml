@@ -113,8 +113,6 @@
         </div>
     </header>
     <!-- Header End -->
-
-
     @RenderBody()
 
 
@@ -131,7 +129,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="footer__top-auth">
-                            <h5>همین حالا عضو شوید و یک ماه هاستینگ دلکسه رایگان دریافت کنید</h5>
+                            <h5>همین حالا ثبت‌نام کنید و سرور خود را در کمتر از ۵ دقیقه راه‌اندازی کنید!</h5>
                             <a href="#" class="primary-btn">ورود</a>
                             <a href="#" class="primary-btn sign-up">ثبت‌نام</a>
                         </div>
@@ -175,13 +173,13 @@
                     </div>
                     <div class="col-lg-2 col-md-6 col-sm-6">
                         <div class="footer__text-widget">
-                            <h5>هاستینگ</h5>
+                            <h5>سرور ها</h5>
                             <ul>
-                                <li><a href="#">هاست اشتراکی</a></li>
-                                <li><a href="#">هاست نمایندگی</a></li>
-                                <li><a href="#">سرور مجازی</a></li>
+                                <li><a href="#"> CPU سرور</a></li>
+                                <li><a href="#"> GPU سرور </a></li>
+                                @* <li><a href="#">سرور مجازی</a></li>
                                 <li><a href="#">سرور اختصاصی</a></li>
-                                <li><a href="#">هاست ابری</a></li>
+                                <li><a href="#">هاست ابری</a></li> *@
                             </ul>
                         </div>
                     </div>
@@ -192,9 +190,9 @@
                                 <li>
                                     دانشگاه اصفهان ، مرکز رشد و فناوری ، اتاق 17 <i class="fa fa-map-marker"> </i>
                                     <br />
-                                    کدپستی : ۸۱۷۴۶۷۳۴۴۱ 
+                                    کدپستی : ۸۱۷۴۶۷۳۴۴۱
                                 </li>
-                                <li> 03137932614 <i class="fa fa-mobile"> </i> </li> 
+                                <li> 03137932614 <i class="fa fa-mobile"> </i> </li>
                                 <li> sitenes.team@gmail.com <i class="fa fa-headphones"> </i> </li>
                             </ul>
                         </div>
@@ -202,7 +200,7 @@
                 </div>
                 <div class="footer__text-copyright">
                     <p>
-                         کلیه حقوق <a href="https://sitenes.ir">برای شرکت بیتا زر اندیش پارس</a> محفوظ است
+                        کلیه حقوق <a href="https://sitenes.ir">برای شرکت بیتا زر اندیش پارس</a> محفوظ است
                         &copy;
                     </p>
                 </div>
@@ -215,9 +213,9 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/jquery.slicknav.js"></script>
     <script src="/static/js/owl.carousel.min.js"></script>
-  @*     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> *@ 
+    @*     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> *@ 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
     <script src="/static/js/main.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
