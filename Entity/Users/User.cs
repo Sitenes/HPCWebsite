@@ -11,20 +11,19 @@ namespace Entity.Users
     {
         public int Id { get; set; }
 
-        [Required]
-        [MaxLength(50)]
-        public string FirstName { get; set; }
+        [MaxLength(100)]
+        public string? FirstName { get; set; }
 
-        [Required]
-        [MaxLength(50)]
-        public string LastName { get; set; }
+        [MaxLength(100)]
+        public string? LastName { get; set; }
 
-        [Required]
         [MaxLength(11)]
         [RegularExpression(@"^09\d{9}$", ErrorMessage = "شماره موبایل معتبر نیست")]
         public long Mobile { get; set; }
+        [MaxLength(100)]
+        public string? Email { get; set; }
 
-        public string VerificationCode { get; set; }
+        public string? VerificationCode { get; set; }
         public DateTime? VerificationCodeExpiry { get; set; }
         public bool IsMobileVerified { get; set; }
 

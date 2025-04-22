@@ -17375,9 +17375,9 @@ table.table-bordered.dataTable thead tr:first-child td {
     justify-content: space-between;
     padding: 137px 130px 137px 95px;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.06);
-    border-radius: 5px;
+    border-radius: 15px;
     z-index: 1;
-    min-width:300px;
+    min-width: 300px;
 }
 
 .container-login100 {
@@ -76014,6 +76014,7 @@ textarea.form-control {
     font-weight: normal;
     font-style: normal;
 }
+
 .no-spin::-webkit-inner-spin-button,
 .no-spin::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -76022,4 +76023,9 @@ textarea.form-control {
 
 .no-spin {
     -moz-appearance: textfield;
+}
+
+.field-validation-error {
+    display: flex;
+    justify-content: flex-end;
 }

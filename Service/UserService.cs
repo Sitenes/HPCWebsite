@@ -19,18 +19,15 @@ namespace Service
         Task<string> GenerateVerificationCodeAsync(long mobile);
         Task<bool> VerifyCodeAsync(long mobile, string code);
         Task<User> LoginAsync(long mobile);
+        Task SaveChangesAsync();
     }
-
     public class UserService : IUserService
     {
         private readonly Context _context;
         private readonly ISmsService _smsService;
         private readonly ICacheService _cacheService;
 
-        public UserService(
-            Context context,
-            ISmsService smsService,
-            ICacheService cacheService)
+        public UserService(Context context, ISmsService smsService, ICacheService cacheService)
         {
             _context = context;
             _smsService = smsService;
@@ -60,7 +57,6 @@ namespace Service
                 throw new InvalidOperationException("شماره موبایل تکراری است");
 
             user.CreatedAt = DateTime.Now;
-            user.IsActive = false;
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
             return user;
@@ -92,7 +88,7 @@ namespace Service
             if (user == null)
                 throw new KeyNotFoundException("کاربر یافت نشد");
 
-            var code = new Random().Next(10000, 99999).ToString();
+            var code = new Random().Next(100000, 999999).ToString();
             var expiry = DateTime.UtcNow.AddMinutes(5);
 
             await _cacheService.SetAsync($"verification_{mobile}", code, TimeSpan.FromMinutes(5));
@@ -110,7 +106,7 @@ namespace Service
             var cachedCode = await _cacheService.GetAsync<string>($"verification_{mobile}");
             var user = await GetByMobileAsync(mobile);
 
-            if (user == null) return false;
+            if (user == null || string.IsNullOrWhiteSpace(code)) return false;
 
             if (cachedCode == code ||
                 (user.VerificationCode == code && user.VerificationCodeExpiry >= DateTime.UtcNow))
@@ -135,5 +131,9 @@ namespace Service
             return user;
         }
 
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

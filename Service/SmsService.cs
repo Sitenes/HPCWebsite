@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Net.Http.Json;
 using ViewModel;
+using Microsoft.Extensions.Options;
 
 namespace Service
 {
@@ -18,10 +19,10 @@ namespace Service
         private readonly HttpClient _httpClient;
         private readonly SmsConfiguration _config;
 
-        public SmsService(HttpClient httpClient, SmsConfiguration config)
+        public SmsService(HttpClient httpClient, IOptions<SmsConfiguration> configure)
         {
             _httpClient = httpClient;
-            _config = config;
+            _config = configure.Value;
         }
 
         public async Task<bool> SendSmsAsync(long mobileNumber, string message)

@@ -7,11 +7,11 @@ public interface ICacheService
     Task RemoveAsync(string key);
 }
 
-public class MemoryCacheService : ICacheService
+public class CacheService : ICacheService
 {
     private readonly IMemoryCache _cache;
 
-    public MemoryCacheService(IMemoryCache cache)
+    public CacheService(IMemoryCache cache)
     {
         _cache = cache;
     }
