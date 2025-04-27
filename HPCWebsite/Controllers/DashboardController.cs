@@ -12,5 +12,13 @@ namespace HPCWebsite.Controllers
         {
             return View();
         }
+        public IActionResult ServerList()
+        {
+            return View();
+        }
+        public IActionResult Server()
+        {
+            return View();
+        }
     }
 }
