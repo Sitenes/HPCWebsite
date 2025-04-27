@@ -19,5 +19,17 @@ namespace ViewModel
         [Required(ErrorMessage = "کد الزامی است")]
         public string Code { get; set; }
     }
+    public class SignUpViewModel
+    {
+
+        [Required(ErrorMessage = "نام الزامی است")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessage = "نام خانوادگی الزامی است")]
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        [Required(ErrorMessage = "شماره تلفن الزامی است")]
+        public int Id { get; set; }
+    }
 
 }

@@ -5,17 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Service
 {
     public interface IUserService
     {
-        Task<User?> GetByIdAsync(Guid id);
+        Task<User?> GetByIdAsync(int id);
         Task<User?> GetByMobileAsync(long mobile);
         Task<bool> IsMobileUniqueAsync(long mobile, int? excludeId = null);
         Task<User> CreateAsync(User user);
         Task<User> UpdateAsync(User user);
-        Task<bool> DeleteAsync(Guid id);
+        Task<bool> DeleteAsync(int id);
         Task<string> GenerateVerificationCodeAsync(long mobile);
         Task<bool> VerifyCodeAsync(long mobile, string code);
         Task<User> LoginAsync(long mobile);
@@ -34,7 +35,7 @@ namespace Service
             _cacheService = cacheService;
         }
 
-        public async Task<User?> GetByIdAsync(Guid id)
+        public async Task<User?> GetByIdAsync(int id)
         {
             return await _context.Users.FindAsync(id);
         }
@@ -73,7 +74,7 @@ namespace Service
             return user;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(int id)
         {
             var user = await GetByIdAsync(id);
             if (user == null) return false;
@@ -94,8 +95,6 @@ namespace Service
             await _cacheService.SetAsync($"verification_{mobile}", code, TimeSpan.FromMinutes(5));
             await _smsService.SendVerificationCodeAsync(mobile, code);
 
-            user.VerificationCode = code;
-            user.VerificationCodeExpiry = expiry;
             await UpdateAsync(user);
 
             return code;
@@ -108,8 +107,7 @@ namespace Service
 
             if (user == null || string.IsNullOrWhiteSpace(code)) return false;
 
-            if (cachedCode == code ||
-                (user.VerificationCode == code && user.VerificationCodeExpiry >= DateTime.UtcNow))
+            if (!cachedCode.IsNullOrEmpty() && cachedCode == code)
             {
                 user.IsMobileVerified = true;
                 await UpdateAsync(user);

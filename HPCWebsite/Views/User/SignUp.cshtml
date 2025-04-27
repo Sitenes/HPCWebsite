@@ -1,10 +1,12 @@
 ﻿@using ViewModel
-@model CodeViewModel
+@model SignUpViewModel
 @{
     Layout = "_LoginLayout";
     ViewData["Title"] = "ثبت نام";
 }
 <form action="CheckCode" class="login100-form validate-form">
+    <input type="hidden" name="mobile" value="@Model.Id" />
+
     <span class="login100-form-title pb-5">
         ثبت نام
     </span>
@@ -22,12 +24,26 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="tab6">
                     <div id="mobile-num" class="wrap-input100 validate-input input-group mb-4">
-                        <input type="hidden" name="id" value="@Model.Mobile" />
+                        <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                            <i class="zmdi zmdi-account text-muted" aria-hidden="true"></i>
+                        </a>
+                        <input type="text" name="@Model.FirstName" class="input100 border-start-0 form-control ms-0 no-spin">
+                    </div>
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                    <div id="mobile-num" class="wrap-input100 validate-input input-group mb-4">
+                        <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
+                            <i class="zmdi zmdi-face text-muted" aria-hidden="true"></i>
+                        </a>
+                        <input type="number" name="@Model.LastName" class="input100 border-start-0 form-control ms-0 no-spin">
+                    </div>
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                    <div id="mobile-num" class="wrap-input100 validate-input input-group mb-4">
                         <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
                             <i class="zmdi zmdi-email text-muted" aria-hidden="true"></i>
                         </a>
-                        <input type="number" name="@Model.Code" class="input100 border-start-0 form-control ms-0 no-spin" min="100000" max="1000000">
+                        <input type="email" name="@Model.Email" class="input100 border-start-0 form-control ms-0 no-spin">
                     </div>
+                    <span asp-validation-for="Email" class="text-danger"></span>
                     <div class="container-login100-form-btn ">
                         <button type="submit" class="login100-form-btn btn-primary">
                             تایید

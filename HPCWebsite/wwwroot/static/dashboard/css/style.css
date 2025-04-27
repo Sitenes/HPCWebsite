@@ -76029,3 +76029,7 @@ textarea.form-control {
     display: flex;
     justify-content: flex-end;
 }
+
+.light-logo1 {
+    max-width: 170px;
+}

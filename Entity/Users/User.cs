@@ -23,8 +23,8 @@ namespace Entity.Users
         [MaxLength(100)]
         public string? Email { get; set; }
 
-        public string? VerificationCode { get; set; }
-        public DateTime? VerificationCodeExpiry { get; set; }
+        //public string? VerificationCode { get; set; }
+        //public DateTime? VerificationCodeExpiry { get; set; }
         public bool IsMobileVerified { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;

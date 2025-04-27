@@ -45,33 +45,54 @@ namespace HPCWebsite.Controllers
         public async Task<IActionResult> CheckCodeAsync(CodeViewModel model)
         {
             var access = await _userService.VerifyCodeAsync(model.Mobile, model.Code);
-            var result = new CodeViewModel
-            {
-                Mobile = model.Mobile,
-                Code = model.Code
-            };
+            await _userService.SaveChangesAsync();
+
+
 
             //if (!access) //Validation Code
             //{
+            //var result = new CodeViewModel
+            //{
+            //    Mobile = model.Mobile,
+            //    Code = model.Code
+            //};
             //    ModelState.AddModelError(nameof(model.Code), "کد وارد شده معتبر نمی باشد");
             //    return View("LoginCode", result);
             //}
 
-            //var user = await _userService.GetByMobileAsync(model.Mobile);
-            // if (user.FirstName.IsNullOrEmpty() && user.LastName && user.Email)
-            return View("SignUp", result);
+            var user = await _userService.GetByMobileAsync(model.Mobile);
+            if (user.FirstName.IsNullOrEmpty() && user.LastName.IsNullOrEmpty() && user.Email.IsNullOrEmpty())
+            {
+                var result = new SignUpViewModel
+                {
+                    Id = user.Id,
+                };
+                return View("SignUp", result);
+            }
+
+            return RedirectToAction("index", "dashboard");
         }
 
-        public async Task<IActionResult> SignUpAsync(long mobile, string firstname, string lastname)
+        public async Task<IActionResult> SignUpAsync(SignUpViewModel input)
         {
+            var createdUser = await _userService.GetByIdAsync(input.Id);
+
+            if (createdUser == null || !createdUser.IsMobileVerified)
+            {
+                return RedirectToAction("login", "user");
+            }
+
             var user = new User
             {
-                Mobile = mobile,
-                FirstName = firstname,
-                LastName = lastname,
+                Id = createdUser.Id,
+                IsActive = true,
+                FirstName = input.FirstName,
+                LastName = input.LastName,
+                Email = input.Email,
             };
-            var createdUser = await _userService.CreateAsync(user);
-            return View("SignUp");
+            await _userService.UpdateAsync(user);
+            await _userService.SaveChangesAsync();
+            return RedirectToAction("index", "dashboard");
         }
 
     }

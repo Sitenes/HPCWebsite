@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\static\dashboard\" />
     <Folder Include="wwwroot\upload\" />
   </ItemGroup>
 
