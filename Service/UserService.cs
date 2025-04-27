@@ -15,7 +15,7 @@ namespace Service
         Task<User?> GetByMobileAsync(long mobile);
         Task<bool> IsMobileUniqueAsync(long mobile, int? excludeId = null);
         Task<User> CreateAsync(User user);
-        Task<User> UpdateAsync(User user);
+        User Update(User user);
         Task<bool> DeleteAsync(int id);
         Task<string> GenerateVerificationCodeAsync(long mobile);
         Task<bool> VerifyCodeAsync(long mobile, string code);
@@ -37,7 +37,7 @@ namespace Service
 
         public async Task<User?> GetByIdAsync(int id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<User?> GetByMobileAsync(long mobile)
@@ -63,14 +63,10 @@ namespace Service
             return user;
         }
 
-        public async Task<User> UpdateAsync(User user)
+        public User Update(User user)
         {
-            if (!await IsMobileUniqueAsync(user.Mobile, user.Id))
-                throw new InvalidOperationException("شماره موبایل تکراری است");
-
             user.UpdatedAt = DateTime.UtcNow;
             _context.Users.Update(user);
-            await _context.SaveChangesAsync();
             return user;
         }
 
@@ -95,7 +91,7 @@ namespace Service
             await _cacheService.SetAsync($"verification_{mobile}", code, TimeSpan.FromMinutes(5));
             await _smsService.SendVerificationCodeAsync(mobile, code);
 
-            await UpdateAsync(user);
+            Update(user);
 
             return code;
         }
@@ -110,7 +106,7 @@ namespace Service
             if (!cachedCode.IsNullOrEmpty() && cachedCode == code)
             {
                 user.IsMobileVerified = true;
-                await UpdateAsync(user);
+                Update(user);
                 return true;
             }
 

@@ -61,6 +61,9 @@ namespace HPCWebsite.Controllers
             //}
 
             var user = await _userService.GetByMobileAsync(model.Mobile);
+            if (user == null)
+                return RedirectToAction("login", "user");
+
             if (user.FirstName.IsNullOrEmpty() && user.LastName.IsNullOrEmpty() && user.Email.IsNullOrEmpty())
             {
                 var result = new SignUpViewModel
@@ -72,7 +75,7 @@ namespace HPCWebsite.Controllers
 
             return RedirectToAction("index", "dashboard");
         }
-
+        [HttpPost(nameof(SignUpAsync))]
         public async Task<IActionResult> SignUpAsync(SignUpViewModel input)
         {
             var createdUser = await _userService.GetByIdAsync(input.Id);
@@ -90,7 +93,7 @@ namespace HPCWebsite.Controllers
                 LastName = input.LastName,
                 Email = input.Email,
             };
-            await _userService.UpdateAsync(user);
+            _userService.Update(user);
             await _userService.SaveChangesAsync();
             return RedirectToAction("index", "dashboard");
         }
