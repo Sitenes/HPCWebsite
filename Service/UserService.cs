@@ -1,11 +1,11 @@
 ﻿
 using DataLayer;
-using Entity.Users;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
+using Entity;
 
 namespace Service
 {

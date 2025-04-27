@@ -1,4 +1,4 @@
-﻿using Entity.Users;
+﻿using Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Service;

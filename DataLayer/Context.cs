@@ -1,4 +1,4 @@
-﻿using Entity.Users;
+﻿using Entity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,5 +17,9 @@ namespace DataLayer
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<BillingInformation> BillingInformations { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Server> Servers { get; set; }
+        public DbSet<ServerRentalOrder> ServerRentalOrders { get; set; }
     }
 }
