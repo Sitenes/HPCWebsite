@@ -13,9 +13,6 @@ namespace Entity
     {
         public int Id { get; set; }
 
-        [Required]
-        public int BillingInformationId { get; set; }
-        public BillingInformation BillingInformation { get; set; }
 
         [Required]
         public int PaymentId { get; set; }
@@ -99,7 +96,6 @@ namespace Entity
         public int BillingInformationId { get; set; }
         public BillingInformation BillingInformation { get; set; }
 
-        public int? ServerRentalOrderId { get; set; }
         public ServerRentalOrder ServerRentalOrder { get; set; }
 
         [Required]

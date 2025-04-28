@@ -1,7 +1,12 @@
 ﻿using Entity;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Service;
+using System.Security.Claims;
 using ViewModel;
 
 namespace HPCWebsite.Controllers
@@ -10,16 +15,18 @@ namespace HPCWebsite.Controllers
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UserController(
+            IUserService userService)
         {
             _userService = userService;
         }
+        [AllowAnonymous]
         public IActionResult Login()
         {
 
             return View("Login");
         }
-
+        [AllowAnonymous]
         public async Task<IActionResult> LoginCodeAsync(long mobile)
         {
 
@@ -64,6 +71,27 @@ namespace HPCWebsite.Controllers
             if (user == null)
                 return RedirectToAction("login", "user");
 
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Mobile.ToString()),
+                new Claim("FullName", $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Role, "User"), // نقش پیش‌فرض
+            };
+
+            var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                new AuthenticationProperties
+                {
+                    IsPersistent = true, // کوکی پایدار
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30) // مدت اعتبار
+                });
+
+
             if (user.FirstName.IsNullOrEmpty() && user.LastName.IsNullOrEmpty() && user.Email.IsNullOrEmpty())
             {
                 var result = new SignUpViewModel
@@ -95,8 +123,26 @@ namespace HPCWebsite.Controllers
             };
             _userService.Update(user);
             await _userService.SaveChangesAsync();
+            // به‌روزرسانی اطلاعات کاربر در کوکی
+            await UpdateUserClaims(user);
+
             return RedirectToAction("index", "dashboard");
         }
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
+        }
+        private async Task UpdateUserClaims(User user)
+        {
+            var identity = (ClaimsIdentity)User.Identity;
+            identity.RemoveClaim(identity.FindFirst("FullName"));
+            identity.AddClaim(new Claim("FullName", $"{user.FirstName} {user.LastName}"));
 
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(identity));
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace Service
 {
     public interface IServerRentalService
     {
-        Task<ServerRentalOrder> CreateOrderAsync(int billingInformationId, int paymentId, int serverId, int rentalDays);
+        Task<ServerRentalOrder> CreateOrderAsync(int paymentId, int serverId, int rentalDays);
         Task<ServerRentalOrder> GetOrderByIdAsync(int id);
         Task<List<ServerRentalOrder>> GetUserOrdersAsync(string userId);
     }
@@ -27,7 +27,7 @@ namespace Service
             _serverService = serverService;
         }
 
-        public async Task<ServerRentalOrder> CreateOrderAsync(int billingInformationId, int paymentId, int serverId, int rentalDays)
+        public async Task<ServerRentalOrder> CreateOrderAsync(int paymentId, int serverId, int rentalDays)
         {
             var server = await _serverService.GetServerByIdAsync(serverId);
             if (server == null)
@@ -35,7 +35,6 @@ namespace Service
 
             var order = new ServerRentalOrder
             {
-                BillingInformationId = billingInformationId,
                 PaymentId = paymentId,
                 ServerId = serverId,
                 ServerName = server.Name,
@@ -54,17 +53,17 @@ namespace Service
         public async Task<ServerRentalOrder> GetOrderByIdAsync(int id)
         {
             return await _context.ServerRentalOrders
-                .Include(o => o.BillingInformation)
                 .Include(o => o.Payment)
+                .ThenInclude(o => o.BillingInformation)
                 .FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<List<ServerRentalOrder>> GetUserOrdersAsync(string userId)
         {
             return await _context.ServerRentalOrders
-                .Include(o => o.BillingInformation)
                 .Include(o => o.Payment)
-                .Where(o => o.BillingInformation.UserId == userId)
+                .ThenInclude(o => o.BillingInformation)
+                .Where(o => o.Payment.BillingInformation.UserId == userId)
                 .OrderByDescending(o => o.CreatedAt)
                 .ToListAsync();
         }

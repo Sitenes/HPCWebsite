@@ -135,7 +135,6 @@ namespace HPCWebsite.Controllers
                 {
                     // ایجاد سفارش اجاره سرور
                     var order = await _serverRentalService.CreateOrderAsync(
-                        verifiedPayment.BillingInformationId,
                         verifiedPayment.Id,
                         1, // اینجا باید ID سرور واقعی قرار گیرد
                         verifiedPayment.BillingInformation.RentalDays);
