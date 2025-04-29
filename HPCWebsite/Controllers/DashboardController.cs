@@ -37,13 +37,21 @@ namespace HPCWebsite.Controllers
         }
         public IActionResult Index()
         {
-            return ServerList();
-            return View();
+            return RedirectToAction("ServerList");
         }
-        public IActionResult ServerList()
+        public async Task<IActionResult> ServerList()
         {
-            //var myServers = await _serverService.GetServersForCurrentUserAsync();
-            return View();
+
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+            if (userId == 0)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // دریافت سرورهای کاربر از سرویس
+            var userServers = await _serverRentalService.GetUserServersAsync(userId);
+            return View(userServers);
+
         }
         public IActionResult ServerInfo()
         {
@@ -83,7 +91,7 @@ namespace HPCWebsite.Controllers
         [HttpGet]
         public async Task<IActionResult> Payment(int billingId)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"); 
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
             var billingInfo = await _billingService.GetUserBillingInformationAsync(userId);
 
             if (billingInfo == null || billingInfo.Id != billingId)
@@ -130,7 +138,7 @@ namespace HPCWebsite.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PaymentCallback(string authority, string status)
+        public async Task<IActionResult> PaymentCallback(string authority, string status = "OK")
         {
             var payment = await _paymentService.GetPaymentByTransactionIdAsync(authority);
 
@@ -176,6 +184,6 @@ namespace HPCWebsite.Controllers
             decimal basePrice = 1000000; // قیمت پایه برای 30 روز
             return (basePrice / 30) * rentalDays;
         }
-     
+
     }
 }

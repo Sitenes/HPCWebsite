@@ -14,6 +14,7 @@ namespace Service
         Task<ServerRentalOrder> CreateOrderAsync(int paymentId, int serverId, int rentalDays);
         Task<ServerRentalOrder> GetOrderByIdAsync(int id);
         Task<List<ServerRentalOrder>> GetUserOrdersAsync(int userId);
+        Task<List<Server>> GetUserServersAsync(int userId);
     }
 
     public class ServerRentalService : IServerRentalService
@@ -66,6 +67,16 @@ namespace Service
                 .Where(o => o.Payment.BillingInformation.UserId == userId)
                 .OrderByDescending(o => o.CreatedAt)
                 .ToListAsync();
+        }
+        public async Task<List<Server>> GetUserServersAsync(int userId)
+        {
+            var activeOrders = await _context.ServerRentalOrders
+                .Include(x=>x.Payment).ThenInclude(x=>x.BillingInformation)
+       .Where(o => o.Payment.BillingInformation.UserId == userId /*&& o.Status == OrderStatus.Active*/)
+       .Include(o => o.Server)
+       .ToListAsync();
+
+            return activeOrders.Select(o => o.Server).ToList();
         }
     }
 }
