@@ -21,13 +21,20 @@ builder.Services.AddHttpClient<ISmsService, SmsService>();
 // ثبت سرویس‌ها با عمر مناسب
 builder.Services.AddScoped<ISmsService, SmsService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IBillingService, BillingService>();
+builder.Services.AddTransient<IPaymentService, PaymentService>();
+builder.Services.AddTransient<IPasargadService, PasargadService>();
+builder.Services.AddTransient<IZarinpalService, ZarinpalService>();
+builder.Services.AddTransient<IServerRentalService, ServerRentalService>();
+builder.Services.AddTransient<IServerService, ServerService>();
+builder.Services.AddTransient<IShoppingCartService, ShoppingCartService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/User/Login";
         options.LogoutPath = "/User/Logout";
-        options.AccessDeniedPath = "/User/AccessDenied";
+        //options.AccessDeniedPath = "/User/AccessDenied";
         options.ExpireTimeSpan = TimeSpan.FromDays(30); // مدت زمان اعتبار کوکی
     });
 

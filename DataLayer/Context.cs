@@ -21,5 +21,7 @@ namespace DataLayer
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Server> Servers { get; set; }
         public DbSet<ServerRentalOrder> ServerRentalOrders { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
     }
 }

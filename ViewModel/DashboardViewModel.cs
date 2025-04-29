@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,10 @@ namespace ViewModel
     public class PaymentErrorViewModel
     {
         public string Message { get; set; }
+    }
+    public class CheckoutViewModel
+    {
+        public BillingInformation BillingInformation { get; set; }
+        public ShoppingCart ShoppingCart { get; set; }
     }
 }

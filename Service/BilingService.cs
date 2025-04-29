@@ -11,9 +11,9 @@ namespace Service
 {
     public interface IBillingService
     {
-        Task<BillingInformation?> GetUserBillingInformationAsync(string userId);
-        Task<BillingInformation> SaveBillingInformationAsync(BillingInformation model, string userId);
-        Task<bool> HasBillingInformationAsync(string userId);
+        Task<BillingInformation?> GetUserBillingInformationAsync(int userId);
+        Task<BillingInformation> SaveBillingInformationAsync(BillingInformation model, int userId);
+        Task<bool> HasBillingInformationAsync(int userId);
     }
 
     public class BillingService : IBillingService
@@ -25,13 +25,13 @@ namespace Service
             _context = context;
         }
 
-        public async Task<BillingInformation?> GetUserBillingInformationAsync(string userId)
+        public async Task<BillingInformation?> GetUserBillingInformationAsync(int userId)
         {
             return await _context.BillingInformations
                 .FirstOrDefaultAsync(b => b.UserId == userId);
         }
 
-        public async Task<BillingInformation> SaveBillingInformationAsync(BillingInformation model, string userId)
+        public async Task<BillingInformation> SaveBillingInformationAsync(BillingInformation model, int userId)
         {
             var existingInfo = await GetUserBillingInformationAsync(userId);
 
@@ -65,7 +65,7 @@ namespace Service
             }
         }
 
-        public async Task<bool> HasBillingInformationAsync(string userId)
+        public async Task<bool> HasBillingInformationAsync(int userId)
         {
             return await _context.BillingInformations
                 .AnyAsync(b => b.UserId == userId);

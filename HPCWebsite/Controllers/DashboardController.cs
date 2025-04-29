@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+using System.Security.Claims;
 using ViewModel;
 
 namespace HPCWebsite.Controllers
 {
-    [ValidateAntiForgeryToken]
     [Authorize]
 
     public class DashboardController : Controller
@@ -15,18 +15,22 @@ namespace HPCWebsite.Controllers
         private readonly IBillingService _billingService;
         private readonly IPaymentService _paymentService;
         private readonly IServerRentalService _serverRentalService;
-        private readonly UserManager<User> _userManager;
+        private readonly IUserService _userManager;
+        private readonly IShoppingCartService _cartService;
 
         public DashboardController(
             IBillingService billingService,
             IPaymentService paymentService,
             IServerRentalService serverRentalService,
-            UserManager<User> userManager)
+            IUserService userManager,
+            IShoppingCartService cartService
+            )
         {
             _billingService = billingService;
             _paymentService = paymentService;
             _serverRentalService = serverRentalService;
             _userManager = userManager;
+            _cartService = cartService;
         }
         public IActionResult Index()
         {
@@ -43,10 +47,17 @@ namespace HPCWebsite.Controllers
 
         public async Task<IActionResult> Checkout()
         {
-            var userId = _userManager.GetUserId(User);
-            var billingInfo = await _billingService.GetUserBillingInformationAsync(userId);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
 
-            var model = billingInfo ?? new BillingInformation();
+            var billingInfo = await _billingService.GetUserBillingInformationAsync(userId);
+            var cart = await _cartService.GetUserCartAsync(userId);
+
+            var model = new CheckoutViewModel
+            {
+                BillingInformation = billingInfo ?? new BillingInformation(),
+                ShoppingCart = cart
+            };
+
             return View(model);
         }
 
@@ -57,8 +68,7 @@ namespace HPCWebsite.Controllers
             {
                 return View(model);
             }
-
-            var userId = _userManager.GetUserId(User);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
             var billingInfo = await _billingService.SaveBillingInformationAsync(model, userId);
 
             // در اینجا می‌توانید کاربر را به صفحه پرداخت هدایت کنید
@@ -68,7 +78,7 @@ namespace HPCWebsite.Controllers
         [HttpGet]
         public async Task<IActionResult> Payment(int billingId)
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"); 
             var billingInfo = await _billingService.GetUserBillingInformationAsync(userId);
 
             if (billingInfo == null || billingInfo.Id != billingId)
@@ -88,7 +98,7 @@ namespace HPCWebsite.Controllers
         [HttpPost]
         public async Task<IActionResult> InitiatePayment(int billingId, PaymentMethod method)
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
             var billingInfo = await _billingService.GetUserBillingInformationAsync(userId);
 
             if (billingInfo == null || billingInfo.Id != billingId)

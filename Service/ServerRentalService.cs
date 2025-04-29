@@ -13,7 +13,7 @@ namespace Service
     {
         Task<ServerRentalOrder> CreateOrderAsync(int paymentId, int serverId, int rentalDays);
         Task<ServerRentalOrder> GetOrderByIdAsync(int id);
-        Task<List<ServerRentalOrder>> GetUserOrdersAsync(string userId);
+        Task<List<ServerRentalOrder>> GetUserOrdersAsync(int userId);
     }
 
     public class ServerRentalService : IServerRentalService
@@ -58,7 +58,7 @@ namespace Service
                 .FirstOrDefaultAsync(o => o.Id == id);
         }
 
-        public async Task<List<ServerRentalOrder>> GetUserOrdersAsync(string userId)
+        public async Task<List<ServerRentalOrder>> GetUserOrdersAsync(int userId)
         {
             return await _context.ServerRentalOrders
                 .Include(o => o.Payment)

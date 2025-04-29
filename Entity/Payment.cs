@@ -13,7 +13,6 @@ namespace Entity
     {
         public int Id { get; set; }
 
-
         [Required]
         public int PaymentId { get; set; }
         public Payment Payment { get; set; }
@@ -28,6 +27,9 @@ namespace Entity
 
         [Required]
         public int ServerId { get; set; }
+
+        [ForeignKey(nameof(ServerId))]
+        public Server? Server { get; set; }
 
         [Required]
         [MaxLength(200)]
@@ -84,7 +86,9 @@ namespace Entity
         [Range(1, 365, ErrorMessage = "مدت زمان اجاره باید بین 1 تا 365 روز باشد")]
         public int RentalDays { get; set; }
 
-        public string UserId { get; set; } // برای ارتباط با کاربر
+        public int UserId { get; set; } // برای ارتباط با کاربر
+        [ForeignKey(nameof(UserId))]
+        public User User { get; set; } // برای ارتباط با کاربر
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
     }

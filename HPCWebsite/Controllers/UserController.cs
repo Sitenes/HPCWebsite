@@ -49,6 +49,7 @@ namespace HPCWebsite.Controllers
             return View("LoginCode", result);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> CheckCodeAsync(CodeViewModel model)
         {
             var access = await _userService.VerifyCodeAsync(model.Mobile, model.Code);
@@ -103,6 +104,7 @@ namespace HPCWebsite.Controllers
 
             return RedirectToAction("index", "dashboard");
         }
+        [Authorize]
         [HttpPost(nameof(SignUpAsync))]
         public async Task<IActionResult> SignUpAsync(SignUpViewModel input)
         {
@@ -113,20 +115,19 @@ namespace HPCWebsite.Controllers
                 return RedirectToAction("login", "user");
             }
 
-            var user = new User
-            {
-                Id = createdUser.Id,
-                IsActive = true,
-                FirstName = input.FirstName,
-                LastName = input.LastName,
-                Email = input.Email,
-            };
-            _userService.Update(user);
+            createdUser.IsActive = true;
+            createdUser.FirstName = input.FirstName;
+            createdUser.LastName = input.LastName;
+            createdUser.Email = input.Email;
+
+            // ذخیره تغییرات در دیتابیس (بسته به سرویس شما ممکن است متد متفاوت باشد)
+            _userService.Update(createdUser);
+           
             await _userService.SaveChangesAsync();
             // به‌روزرسانی اطلاعات کاربر در کوکی
-            await UpdateUserClaims(user);
+            await UpdateUserClaims(createdUser);
 
-            return RedirectToAction("index", "dashboard");
+            return RedirectToAction("Index", "Dashboard");
         }
         [Authorize]
         public async Task<IActionResult> Logout()
