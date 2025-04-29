@@ -101,14 +101,14 @@ namespace Service
             var cachedCode = await _cacheService.GetAsync<string>($"verification_{mobile}");
             var user = await GetByMobileAsync(mobile);
 
-            if (user == null || string.IsNullOrWhiteSpace(code)) return false;
+            //if (user == null || string.IsNullOrWhiteSpace(code)) return false; // TODO : change too validate
 
-            if (!cachedCode.IsNullOrEmpty() && cachedCode == code)
-            {
+            //if (!cachedCode.IsNullOrEmpty() && cachedCode == code)
+            //{
                 user.IsMobileVerified = true;
                 Update(user);
                 return true;
-            }
+            //}
 
             return false;
         }

@@ -55,32 +55,32 @@ namespace Entity
         public int Id { get; set; }
 
         [Required(ErrorMessage = "نام الزامی است")]
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = "";
 
         [Required(ErrorMessage = "نام خانوادگی الزامی است")]
-        public string LastName { get; set; }
+        public string LastName { get; set; } = "";
 
         [Required(ErrorMessage = "آدرس ایمیل الزامی است")]
         [EmailAddress(ErrorMessage = "فرمت ایمیل نامعتبر است")]
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
 
         [Required(ErrorMessage = "شماره تلفن الزامی است")]
         [RegularExpression(@"^[0-9]{11}$", ErrorMessage = "شماره تلفن باید 11 رقمی باشد")]
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = "";
 
-        public string CompanyName { get; set; }
+        public string? CompanyName { get; set; } = "";
 
         [Url(ErrorMessage = "فرمت آدرس وبسایت نامعتبر است")]
-        public string Website { get; set; }
+        public string? Website { get; set; } = "";
 
         [Required(ErrorMessage = "آدرس کامل الزامی است")]
-        public string FullAddress { get; set; }
+        public string FullAddress { get; set; } = "";
 
-        public string Country { get; set; }
-        public string Province { get; set; }
+        public string? Country { get; set; } = "";
+        public string? Province { get; set; } = "";
 
         [Required(ErrorMessage = "کد پستی الزامی است")]
-        public string PostalCode { get; set; }
+        public string PostalCode { get; set; } = "";
 
         [Required(ErrorMessage = "مدت زمان اجاره الزامی است")]
         [Range(1, 365, ErrorMessage = "مدت زمان اجاره باید بین 1 تا 365 روز باشد")]
@@ -88,7 +88,7 @@ namespace Entity
 
         public int UserId { get; set; } // برای ارتباط با کاربر
         [ForeignKey(nameof(UserId))]
-        public User User { get; set; } // برای ارتباط با کاربر
+        public User? User { get; set; } // برای ارتباط با کاربر
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
     }

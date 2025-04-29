@@ -7,68 +7,38 @@ using System.Threading.Tasks;
 
 namespace Entity
 {
-   
 
     public class Server
     {
         public int Id { get; set; }
-
-        [Required]
         public string Name { get; set; }
-
-        [Required]
-        public ServerType Type { get; set; }
-
-        [Required]
+        public ServerType Type { get; set; } // CPU یا GPU
         public string Specifications { get; set; }
-
-        [Required]
         public decimal DailyPrice { get; set; }
-
-        [Required]
         public int Cores { get; set; }
-
-        [Required]
         public int RamGB { get; set; }
-
-        [Required]
         public int StorageGB { get; set; }
-
-        [Required]
-        public string GpuType { get; set; } = "None";
-
-        [Required]
-        public int GpuCount { get; set; } = 0;
-
-        [Required]
-        public string Bandwidth { get; set; } = "1 Gb/s";
-
-        [Required]
-        public bool HasFirewall { get; set; } = true;
-
-        [Required]
-        public bool HasRootAccess { get; set; } = true;
-
-        [Required]
+        public string GpuType { get; set; }
+        public int GpuCount { get; set; }
+        public string Bandwidth { get; set; }
+        public bool HasFirewall { get; set; }
+        public bool HasRootAccess { get; set; }
         public string SupportLevel { get; set; }
-
-        [Required]
-        public string Uptime { get; set; } = "99.9%";
-
-        [Required]
-        public string DeliveryTime { get; set; } = "کمتر از ۱۵ دقیقه";
-
+        public string Uptime { get; set; }
+        public string DeliveryTime { get; set; }
         public bool IsPopular { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public string SuitableFor { get; set; } // فیلد جدید
+        public string ProcessingSpeed { get; set; } // فیلد جدید
+        public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }
 
     public enum ServerType
     {
-        CPU,
-        GPU
+        CPU = 1,
+        GPU = 2
     }
-
+    
     public class ServerCategory
     {
         public int Id { get; set; }

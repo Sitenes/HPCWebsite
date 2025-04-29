@@ -109,13 +109,6 @@
                                                     <span asp-validation-for="BillingInformation.PostalCode" class="text-danger"></span>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 col-md-4">
-                                                <div class="form-group">
-                                                    <label class="form-label">زمان اجاره سرور به روز <span class="text-red">*</span></label>
-                                                    <input asp-for="BillingInformation.RentalDays" type="number" class="form-control" placeholder="30 روز" required min="1" max="365">
-                                                    <span asp-validation-for="BillingInformation.RentalDays" class="text-danger"></span>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="card">
@@ -152,7 +145,7 @@
                             {
                                 <div class="cart-item mb-4">
                                     <div class="d-flex">
-                                        <img class="avatar-xxl br-7" src="@item.ImageUrl" alt="@item.ServerName">
+                                        @* <img class="avatar-xxl br-7" src="@item.ImageUrl" alt="@item.ServerName"> *@
                                         <div class="ms-3">
                                             <h4 class="mb-1 fw-semibold fs-14">@item.ServerName</h4>
                                             <p class="text-muted">@item.ServerSpecs</p>
@@ -209,35 +202,59 @@
 <!--app-content closed-->
 @section Scripts {
     <script>
-        function updateCartItem(input) {
-            const itemId = input.dataset.itemId;
-            const rentalDays = input.value;
-
-            fetch(`/dashboard/update/${itemId}?rentalDays=${rentalDays}`, {
-                method: 'POST',
-                headers: {
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                }
-            }).then(response => {
-                if (response.ok) {
-                    location.reload();
-                }
-            });
-        }
-
+         // تابع حذف آیتم از سبد خرید
         function removeCartItem(itemId) {
-            if (confirm('آیا از حذف این آیتم مطمئن هستید؟')) {
-                fetch(`/dashboard/remove/${itemId}`, {
-                    method: 'POST',
-                    headers: {
-                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                    }
-                }).then(response => {
-                    if (response.ok) {
-                        location.reload();
+            if (confirm('آیا از حذف این آیتم از سبد خرید مطمئن هستید؟')) {
+                $.ajax({
+                    url: '/Cart/RemoveItem',
+                    type: 'POST',
+                    data: { itemId: itemId },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            // رفرش صفحه برای نمایش تغییرات
+                            setTimeout(() => location.reload(), 1000);
+                        } else {
+                            toastr.error(response.message);
+                        }
+                    },
+                    error: function() {
+                        toastr.error('خطا در ارتباط با سرور');
                     }
                 });
             }
+        }
+
+        // تابع به‌روزرسانی تعداد روزهای اجاره
+        function updateCartItem(inputElement) {
+            const itemId = $(inputElement).data('item-id');
+            const rentalDays = $(inputElement).val();
+
+            if (!rentalDays || rentalDays < 1) {
+                toastr.error('تعداد روزهای اجاره باید حداقل 1 باشد');
+                return;
+            }
+
+            $.ajax({
+                url: '/Cart/UpdateItem',
+                type: 'POST',
+                data: {
+                    itemId: itemId,
+                    rentalDays: rentalDays
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success('تعداد روزهای اجاره با موفقیت به‌روزرسانی شد');
+                        // رفرش صفحه برای نمایش تغییرات
+                        setTimeout(() => location.reload(), 2000);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function() {
+                    toastr.error('خطا در ارتباط با سرور');
+                }
+            });
         }
     </script>
 }

@@ -76010,7 +76010,7 @@ textarea.form-control {
 
 @font-face {
     font-family: 'VazirUI';
-    src: url('../static/fonts/Vazirmatn-UI-Regular.ttf') format('truetype');
+    src: url('../../fonts/Vazirmatn-UI-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }

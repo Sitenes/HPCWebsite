@@ -32,7 +32,7 @@
 
     <!-- COLOR SKIN CSS -->
     <link id="theme" rel="stylesheet" type="text/css" media="all" href="colors/color1.css" />
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 </head>
 
 <body class="app sidebar-mini rtl light-mode">
@@ -69,119 +69,31 @@
                                                 <span class="light-layout"><i class="fe fe-sun"></i></span>
                                             </a>
                                         </div>
-                                        <!-- Theme-Layout -->
-                                        <div class="dropdown  d-flex shopping-cart">
-                                            <a class="nav-link icon text-center" data-bs-toggle="dropdown">
-                                                <i class="fe fe-shopping-cart"></i><span class="badge bg-secondary header-badge">4</span>
+                                        <!-- سبد خرید -->
+                                        <div class="dropdown d-flex shopping-cart">
+                                            <a class="nav-link icon text-center" data-bs-toggle="dropdown" onclick="loadCartItems()">
+                                                <i class="fe fe-shopping-cart"></i><span id="cart-count" class="badge bg-secondary header-badge">۰</span>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                                 <div class="drop-heading border-bottom">
                                                     <div class="d-flex">
-                                                        <h6 class="mt-1 mb-0 fs-16 fw-semibold text-dark"> My Shopping Cart</h6>
-                                                        <div class="ms-auto">
-                                                            <span class="badge bg-danger-transparent header-badge text-danger fs-14">Hurry Up!</span>
-                                                        </div>
+                                                        <h6 class="mt-1 mb-0 fs-16 fw-semibold text-dark">سبد خرید من</h6>
                                                     </div>
                                                 </div>
-                                                <div class="header-dropdown-list message-menu">
-                                                    <div class="dropdown-item d-flex p-4">
-                                                        <a href="cart.html" class="open-file"></a>
-                                                        <span class="avatar avatar-xl br-5 me-3 align-self-center cover-image"
-                                                              data-bs-image-src="images/pngs/4.jpg"></span>
-                                                        <div class="wd-50p">
-                                                            <h5 class="mb-1">Flower Pot for Home Decor</h5>
-                                                            <span>Status: <span class="text-success">In Stock</span></span>
-                                                            <p class="fs-13 text-muted mb-0">Quantity: 01</p>
-                                                        </div>
-                                                        <div class="ms-auto text-end d-flex fs-16">
-                                                            <span class="fs-16 text-dark d-none d-sm-block px-4">
-                                                                $438
-                                                            </span>
-                                                            <a href="javascript:void(0)" class="fs-16 btn p-0 cart-trash">
-                                                                <i class="fe fe-trash-2 border text-danger brround d-block p-2"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="dropdown-item d-flex p-4">
-                                                        <a href="cart.html" class="open-file"></a>
-                                                        <span class="avatar avatar-xl br-5 me-3 align-self-center cover-image"
-                                                              data-bs-image-src="images/pngs/6.jpg"></span>
-                                                        <div class="wd-50p">
-                                                            <h5 class="mb-1">Black Digital Camera</h5>
-                                                            <span>Status: <span class="text-danger">Out Stock</span></span>
-                                                            <p class="fs-13 text-muted mb-0">Quantity: 06</p>
-                                                        </div>
-                                                        <div class="ms-auto text-end d-flex">
-                                                            <span class="fs-16 text-dark d-none d-sm-block px-4">
-                                                                $867
-                                                            </span>
-                                                            <a href="javascript:void(0)" class="fs-16 btn p-0 cart-trash">
-                                                                <i class="fe fe-trash-2 border text-danger brround d-block p-2"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="dropdown-item d-flex p-4">
-                                                        <a href="cart.html" class="open-file"></a>
-                                                        <span class="avatar avatar-xl br-5 me-3 align-self-center cover-image"
-                                                              data-bs-image-src="images/pngs/8.jpg"></span>
-                                                        <div class="wd-50p">
-                                                            <h5 class="mb-1">Stylish Rockerz 255 Ear Pods</h5>
-                                                            <span>Status: <span class="text-success">In Stock</span></span>
-                                                            <p class="fs-13 text-muted mb-0">Quantity: 05</p>
-                                                        </div>
-                                                        <div class="ms-auto text-end d-flex">
-                                                            <span class="fs-16 text-dark d-none d-sm-block px-4">
-                                                                $323
-                                                            </span>
-                                                            <a href="javascript:void(0)" class="fs-16 btn p-0 cart-trash">
-                                                                <i class="fe fe-trash-2 border text-danger brround d-block p-2"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="dropdown-item d-flex p-4">
-                                                        <a href="cart.html" class="open-file"></a>
-                                                        <span class="avatar avatar-xl br-5 me-3 align-self-center cover-image"
-                                                              data-bs-image-src="images/pngs/1.jpg"></span>
-                                                        <div class="wd-50p">
-                                                            <h5 class="mb-1">Women Party Wear Dress</h5>
-                                                            <span>Status: <span class="text-success">In Stock</span></span>
-                                                            <p class="fs-13 text-muted mb-0">Quantity: 05</p>
-                                                        </div>
-                                                        <div class="ms-auto text-end d-flex">
-                                                            <span class="fs-16 text-dark d-none d-sm-block px-4">
-                                                                $867
-                                                            </span>
-                                                            <a href="javascript:void(0)" class="fs-16 btn p-0 cart-trash">
-                                                                <i class="fe fe-trash-2 border text-danger brround d-block p-2"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="dropdown-item d-flex p-4">
-                                                        <a href="cart.html" class="open-file"></a>
-                                                        <span class="avatar avatar-xl br-5 me-3 align-self-center cover-image"
-                                                              data-bs-image-src="images/pngs/3.jpg"></span>
-                                                        <div class="wd-50p">
-                                                            <h5 class="mb-1">Running Shoes for men</h5>
-                                                            <span>Status: <span class="text-success">In Stock</span></span>
-                                                            <p class="fs-13 text-muted mb-0">Quantity: 05</p>
-                                                        </div>
-                                                        <div class="ms-auto text-end d-flex">
-                                                            <span class="fs-16 text-dark d-none d-sm-block px-4">
-                                                                $456
-                                                            </span>
-                                                            <a href="javascript:void(0)" class="fs-16 btn p-0 cart-trash">
-                                                                <i class="fe fe-trash-2 border text-danger brround d-block p-2"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
+                                                <div id="cart-items" class="header-dropdown-list message-menu">
+                                                    <!-- پر می‌شود با جاوااسکریپت -->
                                                 </div>
                                                 <div class="dropdown-divider m-0"></div>
-                                                <div class="dropdown-footer">
-                                                    <a class="btn btn-primary btn-pill w-sm btn-sm py-2" href="checkout.html"><i class="fe fe-check-circle"></i> Checkout</a>
-                                                    <span class="float-end p-2 fs-17 fw-semibold">Total: $6789</span>
+                                                <div class="dropdown-footer d-flex justify-content-between align-items-center">
+                                                    <a class="btn btn-primary btn-pill w-sm btn-sm py-2" href="/dashboard/checkout">
+                                                        <i class="fe fe-check-circle"></i> پرداخت نهایی
+                                                    </a>
+                                                    <span id="cart-total" class="p-2 fs-17 fw-semibold">مجموع: ۰ تومان</span>
                                                 </div>
                                             </div>
                                         </div>
+
+
                                         <!-- CART -->
                                         <div class="dropdown d-flex">
                                             <a class="nav-link icon full-screen-link nav-link-bg">
@@ -249,6 +161,12 @@
                                 <a class="side-menu__item has-link" data-bs-toggle="slide" href="/dashboard/index">
                                     <i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">داشبورد</span>
                                 </a>
+                            </li>
+                            <li class="sub-category">
+                                <h3>سرور های من</h3>
+                            </li>
+                            <li class="slide">
+                                <a class="side-menu__item has-link" data-bs-toggle="slide" href="/dashboard/serverlist"><i class="side-menu__icon fe fe-user"></i><span class="side-menu__label">لیست سرور ها</span></a>
                             </li>
                             <li class="sub-category">
                                 <h3>کاربر</h3>
@@ -1013,10 +931,64 @@
     <!-- Color Theme js -->
     <script src="js/themeColors.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
     <!-- CUSTOM JS -->
     <script src="js/custom.js" asp-append-version="true"></script>
 
+
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        function loadCartItems() {
+            fetch('/cart/getcartitems')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) return;
+
+                    const itemsContainer = document.getElementById('cart-items');
+                    itemsContainer.innerHTML = '';
+                    document.getElementById('cart-count').innerText = data.items.length;
+                    document.getElementById('cart-total').innerText = 'مجموع: ' + formatCurrency(data.total) + ' تومان';
+
+                    data.items.forEach(item => {
+                        const html = `
+                        <div class="dropdown-item d-flex p-4">
+                            <a href="/cart" class="open-file"></a>
+                            <span class="avatar avatar-xl br-5 me-3 align-self-center cover-image"
+                                  style="background-image: url('${item.imageUrl}'); background-size: cover;"></span>
+                            <div class="wd-50p">
+                                <h5 class="mb-1">${item.serverName}</h5>
+                                <p class="fs-13 text-muted mb-0">مدت اجاره: ${item.rentalDays} روز</p>
+                                <p class="fs-13 text-muted mb-0">قیمت روزانه: ${formatCurrency(item.dailyPrice)} تومان</p>
+                            </div>
+                            <div class="ms-auto text-end d-flex">
+                                <span class="fs-16 text-dark d-none d-sm-block px-4">
+                                    ${formatCurrency(item.totalPrice)} تومان
+                                </span>
+                                <a href="javascript:void(0)" onclick="removeFromCart(${item.id})" class="fs-16 btn p-0 cart-trash">
+                                    <i class="fe fe-trash-2 border text-danger brround d-block p-2"></i>
+                                </a>
+                            </div>
+                        </div>`;
+                        itemsContainer.insertAdjacentHTML('beforeend', html);
+                    });
+                });
+        }
+
+        function removeFromCart(itemId) {
+            fetch('/cart/remove/' + itemId, { method: 'POST' })
+                .then(() => loadCartItems());
+        }
+
+        function formatCurrency(number) {
+            return number.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+    </script>
+
+
+
+
 </body>
 
 </html>

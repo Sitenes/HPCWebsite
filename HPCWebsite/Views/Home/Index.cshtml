@@ -80,10 +80,6 @@
                         GPU
                         <input type="radio" id="yearly">
                     </label>
-                    @*                     <label for="">
-                        ژوپیترلب
-                        <input type="radio" >
-                    </label> *@
                 </div>
             </div>
             <div class="col-lg-7 col-md-7">
@@ -106,14 +102,13 @@
                         <li>۲۰۰ گیگابایت فضای HDD</li>
                         <li>مناسب کارهای سبک و آموزش</li>
                     </ul>
-                    <a href="#" class="primary-btn">رزرو</a>
+                    <a href="#" class="primary-btn add-to-cart" data-server-id="9">رزرو</a>
                 </div>
             </div>
 
             <!-- پلن 2 - پرفروش‌ترین -->
             <div class="col-lg-3 col-sm-6">
                 <div class="pricing__item popular">
-                    @* <div class="tag">پرفروش‌ترین</div> *@
                     <h4>پلن حرفه‌ای</h4>
                     <h5>۷۲,۰۰۰ روزانه / تومان</h5>
                     <ul>
@@ -122,7 +117,7 @@
                         <li>۴۰۰ گیگابایت فضای HDD</li>
                         <li>مناسب پروژه‌های تحقیقاتی و تولیدی</li>
                     </ul>
-                    <a href="#" class="primary-btn">رزرو</a>
+                    <a href="#" class="primary-btn add-to-cart" data-server-id="2">رزرو</a>
                 </div>
             </div>
 
@@ -137,7 +132,7 @@
                         <li>۴۰۰ گیگابایت فضای HDD</li>
                         <li>مناسب تحلیل‌های پیچیده</li>
                     </ul>
-                    <a href="#" class="primary-btn">رزرو</a>
+                    <a href="#" class="primary-btn add-to-cart" data-server-id="3">رزرو</a>
                 </div>
             </div>
 
@@ -152,10 +147,11 @@
                         <li>۴۰۰ گیگابایت فضای HDD</li>
                         <li>برای پروژه‌های صنعتی و علمی</li>
                     </ul>
-                    <a href="#" class="primary-btn">رزرو</a>
+                    <a href="#" class="primary-btn add-to-cart" data-server-id="4">رزرو</a>
                 </div>
             </div>
         </div>
+
         <div class="row yearly__plans">
             <!-- پلن GPU 1 -->
             <div class="col-lg-3 col-sm-6">
@@ -167,7 +163,7 @@
                         <li>مناسب پردازش تصویر، ویدیو و مدل‌های ML</li>
                         <li>سرعت و کارایی بالا برای پروژه‌های متوسط</li>
                     </ul>
-                    <a href="#" class="primary-btn">رزرو</a>
+                    <a href="#" class="primary-btn add-to-cart" data-server-id="5">رزرو</a>
                 </div>
             </div>
 
@@ -181,7 +177,7 @@
                         <li>قدرت بی‌نظیر در پردازش‌های سنگین</li>
                         <li>مناسب یادگیری عمیق، هوش مصنوعی</li>
                     </ul>
-                    <a href="http://93.126.41.41:5001/api/Command/CreateGPUVM" class="primary-btn">رزرو</a>
+                    <a href="#" class="primary-btn add-to-cart" data-server-id="6">رزرو</a>
                 </div>
             </div>
 
@@ -197,14 +193,13 @@
                         <li>۱ ترابایت فضای ذخیره‌سازی</li>
                         <li>مناسب برای پروژه‌های یادگیری ماشین پیشرفته و محاسبات سنگین</li>
                     </ul>
-                    <a href="#" class="primary-btn">رزرو</a>
+                    <a href="#" class="primary-btn add-to-cart" data-server-id="7">رزرو</a>
                 </div>
             </div>
 
             <!-- پلن Tesla A100 (۸۰GB) -->
             <div class="col-lg-3 col-sm-12">
                 <div class="pricing__item highlight">
-                    @* <div class="tag tag-special">پیشنهاد ویژه</div> *@
                     <h4>پلن فوق‌سنگین</h4>
                     <h5>۱,۸۰۰,۰۰۰ روزانه / تومان</h5>
                     <ul>
@@ -214,13 +209,12 @@
                         <li>۲ ترابایت فضای ذخیره‌سازی</li>
                         <li>ایده‌آل برای پروژه‌های پیشرفته هوش مصنوعی و یادگیری ماشین</li>
                     </ul>
-                    <a href="#" class="primary-btn">رزرو</a>
+                    <a href="#" class="primary-btn add-to-cart" data-server-id="8">رزرو</a>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
 <!-- Pricing Section End -->
 <!-- Services Section Begin -->
 <!-- Pricing Section End -->
@@ -383,4 +377,91 @@
         </div>
     </div>
 </section>
+
+<!-- Modal برای انتخاب تعداد روزهای اجاره -->
+<div class="modal fade" id="rentalDaysModal" tabindex="-1" role="dialog" aria-labelledby="rentalDaysModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rentalDaysModalLabel">انتخاب مدت اجاره</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="rentalDays">تعداد روزهای اجاره:</label>
+                    <input type="number" class="form-control" id="rentalDays" min="1" value="1">
+                </div>
+                <div id="pricePreview" class="mt-3"></div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="primary-btn add-to-cart" id="confirmRental">تایید و افزودن به سبد خرید</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- پایان بخش انتخاب پلن -->
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // رویداد کلیک برای دکمه‌های رزرو
+            $('.add-to-cart').click(function(e) {
+                e.preventDefault();
+                const serverId = $(this).data('server-id');
+
+                // نمایش مدال برای انتخاب تعداد روزهای اجاره
+                $('#rentalDaysModal').modal('show');
+
+                // ذخیره serverId در دکمه تایید مدال
+                $('#confirmRental').data('server-id', serverId);
+            });
+
+            $('#confirmRental').click(function() {
+                const serverId = $(this).data('server-id');
+                const rentalDays = $('#rentalDays').val();
+
+                // if (!rentalDays || rentalDays < 1) {
+                //     toastr.error('لطفاً تعداد روزهای اجاره را وارد کنید');
+                //     return;
+                // }
+
+                // ارسال درخواست به سرور
+                addToCart(serverId, rentalDays);
+            });
+
+                   function addToCart(serverId, rentalDays) {
+            $.ajax({
+                url: '/Cart/AddToCart',
+                type: 'POST',
+                data: {
+                    serverId: serverId,
+                    rentalDays: rentalDays
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // toastr.success('سرور با موفقیت به سبد خرید اضافه شد');
+                        $('#cartItemsCount').text(response.cartItemCount);
+                        $('#rentalDaysModal').modal('hide');
+
+                        // بررسی وجود redirectUrl پس از موفقیت
+                        if (response.redirectUrl) {
+                            setTimeout(() => {
+                                window.location.href = response.redirectUrl;
+                            }, 1000); // صبر ۱ ثانیه برای نمایش نوتیفیکیشن
+                        }
+                    } else {
+                        // toastr.error(response.message);
+                    }
+                },
+                error: function() {
+                    // toastr.error('خطا در ارتباط با سرور');
+                }
+            });
+        }
+
+        });
+    </script>
+}

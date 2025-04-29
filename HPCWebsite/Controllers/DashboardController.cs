@@ -17,13 +17,15 @@ namespace HPCWebsite.Controllers
         private readonly IServerRentalService _serverRentalService;
         private readonly IUserService _userManager;
         private readonly IShoppingCartService _cartService;
+        private readonly IServerService _serverService;
 
         public DashboardController(
             IBillingService billingService,
             IPaymentService paymentService,
             IServerRentalService serverRentalService,
             IUserService userManager,
-            IShoppingCartService cartService
+            IShoppingCartService cartService,
+            IServerService serverService
             )
         {
             _billingService = billingService;
@@ -31,13 +33,16 @@ namespace HPCWebsite.Controllers
             _serverRentalService = serverRentalService;
             _userManager = userManager;
             _cartService = cartService;
+            _serverService = serverService;
         }
         public IActionResult Index()
         {
+            return ServerList();
             return View();
         }
         public IActionResult ServerList()
         {
+            //var myServers = await _serverService.GetServersForCurrentUserAsync();
             return View();
         }
         public IActionResult ServerInfo()
@@ -62,17 +67,17 @@ namespace HPCWebsite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(BillingInformation model)
+        public async Task<IActionResult> Index(CheckoutViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(model);
+            //}
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
-            var billingInfo = await _billingService.SaveBillingInformationAsync(model, userId);
+            var billingInfo = await _billingService.SaveBillingInformationAsync(model.BillingInformation, userId);
 
             // در اینجا می‌توانید کاربر را به صفحه پرداخت هدایت کنید
-            return RedirectToAction("Payment", new { billingId = billingInfo.Id });
+            return RedirectToAction("Checkout");
         }
 
         [HttpGet]
@@ -171,6 +176,6 @@ namespace HPCWebsite.Controllers
             decimal basePrice = 1000000; // قیمت پایه برای 30 روز
             return (basePrice / 30) * rentalDays;
         }
-
+     
     }
 }
