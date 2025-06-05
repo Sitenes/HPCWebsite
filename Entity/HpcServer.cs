@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Entity
 {
 
-    public class Server
+    public class HpcServer
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -31,6 +31,8 @@ namespace Entity
         public string ProcessingSpeed { get; set; } // فیلد جدید
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+
+        public int? WorkflowUserId { get; set; }
     }
 
     public enum ServerType
@@ -52,6 +54,8 @@ namespace Entity
         [Required]
         public string IconClass { get; set; }
 
-        public List<Server> Servers { get; set; }
+        public List<HpcServer> Servers { get; set; }
+
+        public int? WorkflowUserId { get; set; }
     }
 }

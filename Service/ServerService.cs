@@ -7,46 +7,50 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Logging;
+using DataLayer.DbContext;
 
 namespace Service
 {
     public interface IServerService
     {
-        Task<Server> GetServerByIdAsync(int id);
-        Task<List<Server>> GetAllServersAsync();
-        Task<List<Server>> GetServersByTypeAsync(ServerType type);
+        Task<HpcServer> GetServerByIdAsync(int id);
+        Task<List<HpcServer>> GetAllServersAsync();
+        Task<List<HpcServer>> GetServersByTypeAsync(ServerType type);
         Task<List<ServerCategory>> GetServerCategoriesAsync();
-        Task<Server> CreateServerAsync(Server server);
-        Task<Server> UpdateServerAsync(Server server);
+        Task<HpcServer> CreateServerAsync(HpcServer server, int dashboardUserId);
+        Task<HpcServer> UpdateServerAsync(HpcServer server);
         Task<bool> DeleteServerAsync(int id);
-        Task<List<Server>> GetPopularServersAsync(int count = 4);
+        Task<List<HpcServer>> GetPopularServersAsync(int count = 4);
         Task<bool> IsServerAvailableAsync(int serverId);
         Task<decimal> CalculateRentalPriceAsync(int serverId, int rentalDays);
     }
     public class ServerService : IServerService
     {
-        private readonly Context _context;
+        private readonly DynamicDbContext _context;
         private readonly ILogger<ServerService> _logger;
         private readonly ICacheService _cacheService;
+        private readonly Context _basicContext;
 
         public ServerService(
-            Context context,
+            DynamicDbContext context,
             ILogger<ServerService> logger,
-            ICacheService cacheService)
+            ICacheService cacheService,
+            Context basicContext)
         {
             _context = context;
             _logger = logger;
             _cacheService = cacheService;
+            this._basicContext = basicContext;
         }
 
-        public async Task<Server> GetServerByIdAsync(int id)
+        public async Task<HpcServer> GetServerByIdAsync(int id)
         {
             try
             {
                 var cacheKey = $"server_{id}";
                 var server = await _cacheService.GetOrCreateAsync(cacheKey, async () =>
                 {
-                    return await _context.Servers
+                    return await _context.HpcServers
                         .AsNoTracking()
                         .FirstOrDefaultAsync(s => s.Id == id);
                 }, TimeSpan.FromMinutes(30));
@@ -60,11 +64,11 @@ namespace Service
             }
         }
 
-        public async Task<List<Server>> GetAllServersAsync()
+        public async Task<List<HpcServer>> GetAllServersAsync()
         {
             try
             {
-                return await _context.Servers
+                return await _context.HpcServers
                     .AsNoTracking()
                     .OrderByDescending(s => s.IsPopular)
                     .ThenBy(s => s.DailyPrice)
@@ -77,14 +81,14 @@ namespace Service
             }
         }
 
-        public async Task<List<Server>> GetServersByTypeAsync(ServerType type)
+        public async Task<List<HpcServer>> GetServersByTypeAsync(ServerType type)
         {
             try
             {
                 var cacheKey = $"servers_{type}";
                 return await _cacheService.GetOrCreateAsync(cacheKey, async () =>
                 {
-                    return await _context.Servers
+                    return await _context.HpcServers
                         .AsNoTracking()
                         .Where(s => s.Type == type)
                         .OrderByDescending(s => s.IsPopular)
@@ -134,11 +138,16 @@ namespace Service
             }
         }
 
-        public async Task<Server> CreateServerAsync(Server server)
+        public async Task<HpcServer> CreateServerAsync(HpcServer server,int dashboardUserId)
         {
             try
             {
-                await _context.Servers.AddAsync(server);
+                var workflowUser = new Entities.Models.Workflows.Workflow_User { WorkflowId = 1, UserId = dashboardUserId };
+                await _basicContext.Workflow_User.AddAsync(workflowUser);
+                await _context.SaveChangesAsync();
+                server.WorkflowUserId = workflowUser.Id;
+
+                await _context.HpcServers.AddAsync(server);
                 await _context.SaveChangesAsync();
 
                 // Clear relevant caches
@@ -154,11 +163,11 @@ namespace Service
             }
         }
 
-        public async Task<Server> UpdateServerAsync(Server server)
+        public async Task<HpcServer> UpdateServerAsync(HpcServer server)
         {
             try
             {
-                var existingServer = await _context.Servers.FindAsync(server.Id);
+                var existingServer = await _context.HpcServers.FindAsync(server.Id);
                 if (existingServer == null)
                     throw new Exception("Server not found");
 
@@ -186,11 +195,11 @@ namespace Service
         {
             try
             {
-                var server = await _context.Servers.FindAsync(id);
+                var server = await _context.HpcServers.FindAsync(id);
                 if (server == null)
                     return false;
 
-                _context.Servers.Remove(server);
+                _context.HpcServers.Remove(server);
                 await _context.SaveChangesAsync();
 
                 // Clear relevant caches
@@ -207,11 +216,11 @@ namespace Service
             }
         }
 
-        public async Task<List<Server>> GetPopularServersAsync(int count = 4)
+        public async Task<List<HpcServer>> GetPopularServersAsync(int count = 4)
         {
             try
             {
-                return await _context.Servers
+                return await _context.HpcServers
                     .AsNoTracking()
                     .Where(s => s.IsPopular)
                     .OrderBy(s => s.DailyPrice)

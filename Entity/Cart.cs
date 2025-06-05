@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace Entity
 {
-    public class ShoppingCart
+    public class HpcShoppingCart
     {
         public int Id { get; set; }
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
-        public User? User { get; set; }
-        public List<CartItem> Items { get; set; } = new List<CartItem>();
+        public HpcUser? User { get; set; }
+        public List<HpcCartItem> Items { get; set; } = new List<HpcCartItem>();
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
 
@@ -26,13 +26,14 @@ namespace Entity
 
         [NotMapped]
         public decimal Total => SubTotal - DiscountAmount;
+        public int? WorkflowUserId { get; set; }
     }
 
-    public class CartItem
+    public class HpcCartItem
     {
         public int Id { get; set; }
         public int ShoppingCartId { get; set; }
-        public ShoppingCart ShoppingCart { get; set; }
+        public HpcShoppingCart ShoppingCart { get; set; }
 
         public int ServerId { get; set; }
         public string ServerName { get; set; }
@@ -46,5 +47,6 @@ namespace Entity
         public decimal TotalPrice => DailyPrice * RentalDays;
 
         public DateTime AddedAt { get; set; } = DateTime.Now;
+        public int? WorkflowUserId { get; set; }
     }
 }

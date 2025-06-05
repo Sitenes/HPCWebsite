@@ -14,11 +14,14 @@ namespace HPCWebsite.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
-
+        private readonly IConfiguration _configuration;
+       
         public UserController(
-            IUserService userService)
+            IUserService userService,
+            IConfiguration configuration)
         {
             _userService = userService;
+            _configuration = configuration;
         }
         [AllowAnonymous]
         public IActionResult Login()
@@ -33,14 +36,18 @@ namespace HPCWebsite.Controllers
             var user = await _userService.GetByMobileAsync(mobile);
             if (user == null)
             {
-                user = new User
+                user = new HpcUser
                 {
                     Mobile = mobile,
                 };
-                user = await _userService.CreateAsync(user);
+                user = await _userService.CreateAsync(user, int.Parse(User.FindFirstValue(ClaimTypes.Name) ?? "1"));
             }
-
-            var code = await _userService.GenerateVerificationCodeAsync(mobile);
+            else
+            {
+                var redirectUrl = _configuration["AppSettings:LoginRedirectUrl"];
+                Redirect(redirectUrl);
+            }
+                var code = await _userService.GenerateVerificationCodeAsync(mobile);
             await _userService.SaveChangesAsync();
             var result = new CodeViewModel
             {
@@ -75,7 +82,7 @@ namespace HPCWebsite.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Mobile.ToString()),
+                new Claim(ClaimTypes.Name, user.UserId.ToString()),
                 new Claim("FullName", $"{user.FirstName} {user.LastName}"),
                 new Claim(ClaimTypes.Role, "User"), // نقش پیش‌فرض
             };
@@ -121,7 +128,7 @@ namespace HPCWebsite.Controllers
             createdUser.Email = input.Email;
 
             // ذخیره تغییرات در دیتابیس (بسته به سرویس شما ممکن است متد متفاوت باشد)
-            _userService.Update(createdUser);
+            await _userService.UpdateAsync(createdUser);
            
             await _userService.SaveChangesAsync();
             // به‌روزرسانی اطلاعات کاربر در کوکی
@@ -135,7 +142,7 @@ namespace HPCWebsite.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index","Home");
         }
-        private async Task UpdateUserClaims(User user)
+        private async Task UpdateUserClaims(HpcUser user)
         {
             var identity = (ClaimsIdentity)User.Identity;
             identity.RemoveClaim(identity.FindFirst("FullName"));

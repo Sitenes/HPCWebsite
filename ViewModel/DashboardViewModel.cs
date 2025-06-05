@@ -21,7 +21,7 @@ namespace ViewModel
     }
     public class CheckoutViewModel
     {
-        public BillingInformation BillingInformation { get; set; }
-        public ShoppingCart ShoppingCart { get; set; }
+        public HpcBillingInformation BillingInformation { get; set; }
+        public HpcShoppingCart ShoppingCart { get; set; }
     }
 }

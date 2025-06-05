@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Logging;
+using DataLayer.DbContext;
 
 namespace Service
 {
     public interface IShoppingCartService
     {
-        Task<ShoppingCart> GetUserCartAsync(int userId);
-        Task AddToCartAsync(int userId, int serverId, int rentalDays);
+        Task<HpcShoppingCart> GetUserCartAsync(int userId);
+        Task AddToCartAsync(int userId, int serverId, int rentalDays, int dashboardUserId);
         Task RemoveFromCartAsync(int userId, int itemId);
         Task UpdateCartItemAsync(int userId, int itemId, int rentalDays);
         Task ClearCartAsync(int userId);
@@ -22,30 +23,34 @@ namespace Service
 
     public class ShoppingCartService : IShoppingCartService
     {
-        private readonly Context _context;
+        private readonly DynamicDbContext _context;
         private readonly IServerService _serverService;
         private readonly ILogger<ShoppingCartService> _logger;
+        private readonly Context _basicContext;
 
         public ShoppingCartService(
-            Context context,
+            DynamicDbContext context,
             IServerService serverService,
-            ILogger<ShoppingCartService> logger)
+            ILogger<ShoppingCartService> logger,
+            Context basicContext)
         {
             _context = context;
             _serverService = serverService;
             _logger = logger;
+            this._basicContext = basicContext;
         }
 
-        public async Task<ShoppingCart> GetUserCartAsync(int userId)
+        public async Task<HpcShoppingCart> GetUserCartAsync(int userId)
         {
-            var cart = await _context.ShoppingCarts
+            var cart = await _context.HpcShoppingCarts
                 .Include(c => c.Items)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
             if (cart == null)
             {
-                cart = new ShoppingCart { UserId = userId };
-                await _context.ShoppingCarts.AddAsync(cart);
+                cart = new HpcShoppingCart { UserId = userId };
+
+                await _context.HpcShoppingCarts.AddAsync(cart);
                 await _context.SaveChangesAsync();
             }
 
@@ -58,7 +63,7 @@ namespace Service
             return cart;
         }
 
-        public async Task AddToCartAsync(int userId, int serverId, int rentalDays)
+        public async Task AddToCartAsync(int userId, int serverId, int rentalDays, int dashboardUserId)
         {
             var server = await _serverService.GetServerByIdAsync(serverId);
             if (server == null)
@@ -75,14 +80,20 @@ namespace Service
             }
             else
             {
-                cart.Items.Add(new CartItem
+                var workflowUser = new Entities.Models.Workflows.Workflow_User { WorkflowId = 1, UserId = dashboardUserId };
+                await _basicContext.Workflow_User.AddAsync(workflowUser);
+                await _context.SaveChangesAsync();
+                var wkID = workflowUser.Id;
+
+                cart.Items.Add(new HpcCartItem
                 {
                     ServerId = serverId,
                     ServerName = server.Name,
                     ServerSpecs = server.Specifications,
                     ImageUrl = $"/images/servers/{serverId}.jpg",
                     DailyPrice = server.DailyPrice,
-                    RentalDays = rentalDays
+                    RentalDays = rentalDays,
+                    WorkflowUserId = wkID
                 });
             }
 
@@ -97,7 +108,7 @@ namespace Service
 
             if (item != null)
             {
-                _context.CartItems.Remove(item);
+                _context.HpcCartItems.Remove(item);
                 cart.UpdatedAt = DateTime.Now;
                 await _context.SaveChangesAsync();
             }
@@ -119,7 +130,7 @@ namespace Service
         public async Task ClearCartAsync(int userId)
         {
             var cart = await GetUserCartAsync(userId);
-            _context.CartItems.RemoveRange(cart.Items);
+            _context.HpcCartItems.RemoveRange(cart.Items);
             cart.UpdatedAt = DateTime.Now;
             await _context.SaveChangesAsync();
         }

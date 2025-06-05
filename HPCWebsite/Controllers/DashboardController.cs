@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Service;
 using System.Security.Claims;
 using ViewModel;
@@ -67,7 +68,7 @@ namespace HPCWebsite.Controllers
 
             var model = new CheckoutViewModel
             {
-                BillingInformation = billingInfo ?? new BillingInformation(),
+                BillingInformation = billingInfo ?? new HpcBillingInformation(),
                 ShoppingCart = cart
             };
 
@@ -78,63 +79,95 @@ namespace HPCWebsite.Controllers
         public async Task<IActionResult> Index(CheckoutViewModel model)
         {
             //if (!ModelState.IsValid)
-            //{
+            //
             //    return View(model);
             //}
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.Name) ?? "1");
+            if (model.BillingInformation.UserId == 0)
+            {
+                model.BillingInformation.UserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+            }
             var billingInfo = await _billingService.SaveBillingInformationAsync(model.BillingInformation, userId);
 
             // در اینجا می‌توانید کاربر را به صفحه پرداخت هدایت کنید
             return RedirectToAction("Checkout");
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> Payment(int billingId)
+        //{
+        //    var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+        //    var billingInfo = await _billingService.GetUserBillingInformationAsync(userId);
+
+        //    if (billingInfo == null || billingInfo.Id != billingId)
+        //    {
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    // محاسبه مبلغ بر اساس مدت اجاره و نوع سرور
+        //    decimal amount = 
+
+        //    ViewBag.BillingId = billingId;
+        //    ViewBag.Amount = amount;
+
+        //    return View();
+        //}
         [HttpGet]
-        public async Task<IActionResult> Payment(int billingId)
+        public async Task<IActionResult> InitiatePayment(int userId, PaymentMethod method = PaymentMethod.Zarinpal)
         {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
-            var billingInfo = await _billingService.GetUserBillingInformationAsync(userId);
+            if (userId == 0)
+                userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
+            var userCart = await _cartService.GetUserCartAsync(userId);
+            var user = await _userManager.GetByIdAsync(userId);
 
-            if (billingInfo == null || billingInfo.Id != billingId)
+            if (userCart == null)
             {
                 return RedirectToAction("Index");
             }
+            decimal amount = userCart.Total;
+          
 
-            // محاسبه مبلغ بر اساس مدت اجاره و نوع سرور
-            decimal amount = CalculateRentalAmount(billingInfo.RentalDays);
-
-            ViewBag.BillingId = billingId;
-            ViewBag.Amount = amount;
-
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> InitiatePayment(int billingId, PaymentMethod method)
-        {
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
-            var billingInfo = await _billingService.GetUserBillingInformationAsync(userId);
-
-            if (billingInfo == null || billingInfo.Id != billingId)
+            if (method == PaymentMethod.Zarinpal)
             {
-                return RedirectToAction("Index");
+                var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+                var merchantId = config["Zarinpal:MerchantId"];
+                var baseUrl = config["Zarinpal:BaseUrl"];
+
+                var callbackUrl = Url.Action("PaymentCallback", null, null, Request.Scheme);
+
+                using var client = new HttpClient();
+                var req = new ZarinpalRequest
+                {
+                    merchant_id = merchantId,
+                    amount = (int)amount * 10,
+                    callback_url = callbackUrl,
+                    description = "خرید سرور",
+                    metadata = new Dictionary<string, string>
+            {
+                { "mobile", ("0" + user?.Mobile.ToString()) ?? "" },
+                { "email", user?.Email ?? "" }
+            }
+                };
+
+                var response = await client.PostAsJsonAsync($"{baseUrl}payment/request.json", req);
+                var result = await response.Content.ReadFromJsonAsync<ZarinpalResponse>();
+
+                if (result != null && result.data != null && response.IsSuccessStatusCode)
+                {
+                    var authority = result.data.authority;
+                    var payment = await _paymentService.InitiatePaymentAsync(userCart.Id, authority, amount, method, int.Parse(User.FindFirstValue(ClaimTypes.Name) ?? "1"));
+                    return Redirect($"https://sandbox.zarinpal.com/pg/StartPay/{authority}");
+                }
+                else
+                {
+                    return View("PaymentError", new PaymentErrorViewModel
+                    {
+                        Message = $"خطا در اتصال به زرین‌پال: {result?.message ?? "نامشخص"}"
+                    });
+                }
             }
 
-            decimal amount = CalculateRentalAmount(billingInfo.RentalDays);
-            var payment = await _paymentService.InitiatePaymentAsync(billingId, amount, method);
-
-            string redirectUrl = "";
-
-            switch (method)
-            {
-                case PaymentMethod.Zarinpal:
-                    redirectUrl = $"https://www.zarinpal.com/pg/StartPay/{payment.TransactionId}";
-                    break;
-                case PaymentMethod.BankPasargad:
-                    redirectUrl = $"https://bankpasargad.com/payment/{payment.TransactionId}";
-                    break;
-            }
-
-            return Redirect(redirectUrl);
+            return RedirectToAction("Checkout");
         }
 
         [HttpGet]
@@ -144,7 +177,7 @@ namespace HPCWebsite.Controllers
 
             if (payment == null)
             {
-                return View("PaymentError", new PaymentErrorViewModel
+                return View("PaymentFail", new PaymentErrorViewModel
                 {
                     Message = "تراکنش یافت نشد"
                 });
@@ -156,33 +189,37 @@ namespace HPCWebsite.Controllers
 
                 if (verifiedPayment.Status == PaymentStatus.Completed)
                 {
-                    // ایجاد سفارش اجاره سرور
-                    var order = await _serverRentalService.CreateOrderAsync(
-                        verifiedPayment.Id,
-                        1, // اینجا باید ID سرور واقعی قرار گیرد
-                        verifiedPayment.BillingInformation.RentalDays);
+                    var cart = verifiedPayment.ShoppingCart;
+                    var orders = new List<HpcServerRentalOrder>();
+
+                    if (cart?.Items != null && cart.Items.Any())
+                    {
+                        foreach (var item in cart.Items)
+                        {
+                            var order = await _serverRentalService.CreateOrderAsync(
+                                verifiedPayment.ShoppingCart.UserId,
+                                item.ServerId,
+                                item.RentalDays,
+                                int.Parse(User.FindFirstValue(ClaimTypes.Name) ?? "1")
+                            );
+
+                            orders.Add(order);
+                        }
+                    }
 
                     return View("PaymentSuccess", new PaymentSuccessViewModel
                     {
-                        OrderId = order.Id,
+                        OrderId = verifiedPayment.ShoppingCart.Id,
                         Amount = verifiedPayment.Amount,
                         PaymentDate = verifiedPayment.PaymentDate
                     });
                 }
             }
 
-            return View("PaymentError", new PaymentErrorViewModel
+            return View("PaymentFail", new PaymentErrorViewModel
             {
                 Message = "پرداخت با خطا مواجه شد"
             });
-        }
-
-        private decimal CalculateRentalAmount(int rentalDays)
-        {
-            // محاسبه مبلغ بر اساس تعداد روزهای اجاره
-            // این منطق می‌تواند بر اساس نیازهای کسب‌وکار تغییر کند
-            decimal basePrice = 1000000; // قیمت پایه برای 30 روز
-            return (basePrice / 30) * rentalDays;
         }
 
     }

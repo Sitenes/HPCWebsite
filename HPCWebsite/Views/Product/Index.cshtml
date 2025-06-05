@@ -59,7 +59,7 @@
                                                         <div class="plan__price">۳۶,۰۰۰</div>
                                                         <span>تومان (روزانه)</span>
                                                     </div>
-                                                    <a href="#" class="primary-btn popular-btn">خرید پلن</a>
+                                                    <a href="#" class="primary-btn add-to-cart" data-server-id="9">رزرو</a>
                                                 </div>
                                             </th>
                                             <th>
@@ -73,7 +73,7 @@
                                                         <div class="plan__price">۷۲,۰۰۰</div>
                                                         <span class="price-period">تومان (روزانه)</span>
                                                     </div>
-                                                    <a href="#" class="primary-btn popular-btn">خرید پلن</a>
+                                                    <a href="#" class="primary-btn add-to-cart" data-server-id="2">رزرو</a>
                                                 </div>
                                             </th>
                                             <th>
@@ -83,7 +83,7 @@
                                                         <div class="plan__price">۱۴۴,۰۰۰</div>
                                                         <span>تومان (روزانه)</span>
                                                     </div>
-                                                    <a href="#" class="primary-btn popular-btn">خرید پلن</a>
+                                                    <a href="#" class="primary-btn add-to-cart" data-server-id="3">رزرو</a>
                                                 </div>
 
                                             </th>
@@ -94,7 +94,7 @@
                                                         <div class="plan__price">۲۸۸,۰۰۰</div>
                                                         <span>تومان (روزانه)</span>
                                                     </div>
-                                                    <a href="#" class="primary-btn popular-btn">خرید پلن</a>
+                                                    <a href="#" class="primary-btn add-to-cart" data-server-id="4">رزرو</a>
                                                 </div>
                                             </th>
                                         </tr>
@@ -202,7 +202,7 @@
                                                             <div class="plan__price">۴۰۰,۰۰۰</div>
                                                             <span>تومان (روزانه)</span>
                                                         </div>
-                                                        <a href="#" class="primary-btn popular-btn">رزرو</a>
+                                                        <a href="#" class="primary-btn add-to-cart" data-server-id="5">رزرو</a>
                                                     </div>
                                                 </th>
                                                 <th>
@@ -216,7 +216,7 @@
                                                             <div class="plan__price">۶۰۰,۰۰۰</div>
                                                             <span class="price-period">تومان (روزانه)</span>
                                                         </div>
-                                                        <a href="http://93.126.41.41:5001/api/Command/CreateGPUVM" class="primary-btn popular-btn">رزرو</a>
+                                                        <a href="#" class="primary-btn add-to-cart" data-server-id="6">رزرو</a>
                                                     </div>
                                                 </th>
                                                 <th>
@@ -226,7 +226,7 @@
                                                             <div class="plan__price">۱,۰۰۰,۰۰۰</div>
                                                             <span>تومان (روزانه)</span>
                                                         </div>
-                                                        <a href="#" class="primary-btn popular-btn">رزرو</a>
+                                                        <a href="#" class="primary-btn add-to-cart" data-server-id="7">رزرو</a>
                                                     </div>
                                                 </th>
                                                 <th>
@@ -236,7 +236,7 @@
                                                             <div class="plan__price">۱,۸۰۰,۰۰۰</div>
                                                             <span>تومان (روزانه)</span>
                                                         </div>
-                                                        <a href="#" class="primary-btn popular-btn">رزرو</a>
+                                                        <a href="#" class="primary-btn add-to-cart" data-server-id="8">رزرو</a>
                                                     </div>
                                                 </th>
                                             </tr>
@@ -470,3 +470,90 @@
     </div>
 </section>
 <!-- بخش پرسش و پاسخ پایان -->
+<!-- Modal برای انتخاب تعداد روزهای اجاره -->
+<div class="modal fade" id="rentalDaysModal" tabindex="-1" role="dialog" aria-labelledby="rentalDaysModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rentalDaysModalLabel">انتخاب مدت اجاره</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="rentalDays">تعداد روزهای اجاره:</label>
+                    <input type="number" class="form-control" id="rentalDays" min="1" value="1">
+                </div>
+                <div id="pricePreview" class="mt-3"></div>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="primary-btn add-to-cart" id="confirmRental">تایید و افزودن به سبد خرید</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- پایان بخش انتخاب پلن -->
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // رویداد کلیک برای دکمه‌های رزرو
+            $('.add-to-cart').click(function(e) {
+                e.preventDefault();
+                const serverId = $(this).data('server-id');
+
+                // نمایش مدال برای انتخاب تعداد روزهای اجاره
+                $('#rentalDaysModal').modal('show');
+
+                // ذخیره serverId در دکمه تایید مدال
+                $('#confirmRental').data('server-id', serverId);
+            });
+
+            $('#confirmRental').click(function() {
+                const serverId = $(this).data('server-id');
+                const rentalDays = $('#rentalDays').val();
+
+                // if (!rentalDays || rentalDays < 1) {
+                //     toastr.error('لطفاً تعداد روزهای اجاره را وارد کنید');
+                //     return;
+                // }
+
+                // ارسال درخواست به سرور
+                addToCart(serverId, rentalDays);
+            });
+
+                   function addToCart(serverId, rentalDays) {
+            $.ajax({
+                url: '/Cart/AddToCart',
+                type: 'POST',
+                data: {
+                    serverId: serverId,
+                    rentalDays: rentalDays
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // toastr.success('سرور با موفقیت به سبد خرید اضافه شد');
+                        $('#cartItemsCount').text(response.cartItemCount);
+                        $('#rentalDaysModal').modal('hide');
+
+                        // بررسی وجود redirectUrl پس از موفقیت
+                        if (response.redirectUrl) {
+                            setTimeout(() => {
+                                window.location.href = response.redirectUrl;
+                            }, 1000); // صبر ۱ ثانیه برای نمایش نوتیفیکیشن
+                        }
+                    } else {
+                        // toastr.error(response.message);
+                    }
+                },
+                error: function() {
+                    // toastr.error('خطا در ارتباط با سرور');
+                }
+            });
+        }
+
+        });
+    </script>
+}

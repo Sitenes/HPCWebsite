@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 namespace Entity
 {
 
-    public class ServerRentalOrder
+    public class HpcServerRentalOrder
     {
         public int Id { get; set; }
 
         [Required]
-        public int PaymentId { get; set; }
-        public Payment Payment { get; set; }
+        public int UserId { get; set; }
 
         [Required]
         public DateTime StartDate { get; set; }
@@ -29,7 +28,7 @@ namespace Entity
         public int ServerId { get; set; }
 
         [ForeignKey(nameof(ServerId))]
-        public Server? Server { get; set; }
+        public HpcServer? Server { get; set; }
 
         [Required]
         [MaxLength(200)]
@@ -39,6 +38,9 @@ namespace Entity
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
+
+
+        public int? WorkflowUserId { get; set; }
     }
 
     public enum OrderStatus
@@ -50,7 +52,7 @@ namespace Entity
     }
 
    
-    public class BillingInformation
+    public class HpcBillingInformation
     {
         public int Id { get; set; }
 
@@ -88,19 +90,20 @@ namespace Entity
 
         public int UserId { get; set; } // برای ارتباط با کاربر
         [ForeignKey(nameof(UserId))]
-        public User? User { get; set; } // برای ارتباط با کاربر
+        public HpcUser? User { get; set; } // برای ارتباط با کاربر
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
+
+
+        public int? WorkflowUserId { get; set; }
     }
-    public class Payment
+    public class HpcPayment
     {
         public int Id { get; set; }
 
         [Required]
-        public int BillingInformationId { get; set; }
-        public BillingInformation BillingInformation { get; set; }
-
-        public ServerRentalOrder ServerRentalOrder { get; set; }
+        public int ShoppingCartId { get; set; }
+        public HpcShoppingCart ShoppingCart { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
@@ -117,6 +120,7 @@ namespace Entity
         public DateTime PaymentDate { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
+        public int? WorkflowUserId { get; set; }
     }
 
     public enum PaymentMethod
@@ -152,5 +156,28 @@ namespace Entity
         public string MaskedCardNumber { get; set; }
         public string InvoiceNumber { get; set; }
         public int Status { get; set; }
+    }
+
+    public class ZarinpalRequest
+    {
+        public string merchant_id { get; set; }
+        public int amount { get; set; }
+        public string callback_url { get; set; }
+        public string description { get; set; }
+        public Dictionary<string, string> metadata { get; set; }
+    }
+
+    public class ZarinpalResponse
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+        public ZarinpalResponseData data { get; set; }
+    }
+
+    public class ZarinpalResponseData
+    {
+        public string authority { get; set; }
+        public string fee_type { get; set; }
+        public int fee { get; set; }
     }
 }

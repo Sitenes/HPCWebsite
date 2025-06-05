@@ -32,7 +32,7 @@ namespace HPCWebsite.Controllers
                     return Json(new { success = true, redirectUrl = Url.Action("Login", "User"), message = "لطفاً ابتدا وارد سیستم شوید" });
                 }
 
-                await _shoppingCartService.AddToCartAsync(userId, serverId, rentalDays);
+                await _shoppingCartService.AddToCartAsync(userId, serverId, rentalDays, int.Parse(User.FindFirstValue(ClaimTypes.Name) ?? "1"));
                 var cartItemCount = await _shoppingCartService.GetCartItemCountAsync(userId);
 
                 return Json(new

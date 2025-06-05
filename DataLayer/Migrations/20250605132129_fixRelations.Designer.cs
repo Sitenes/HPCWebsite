@@ -13,8 +13,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(DynamicDbContext))]
-    [Migration("20250429104007_AddItemsToServer")]
-    partial class AddItemsToServer
+    [Migration("20250605132129_fixRelations")]
+    partial class fixRelations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,11 +35,9 @@ namespace DataLayer.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CompanyName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -70,7 +68,6 @@ namespace DataLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Province")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RentalDays")
@@ -83,7 +80,6 @@ namespace DataLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Website")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -146,9 +142,6 @@ namespace DataLayer.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("BillingInformationId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -157,6 +150,9 @@ namespace DataLayer.Migrations
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("ShoppingCartId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -171,7 +167,7 @@ namespace DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BillingInformationId");
+                    b.HasIndex("ShoppingCartId");
 
                     b.ToTable("Payments");
                 });
@@ -272,9 +268,6 @@ namespace DataLayer.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PaymentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ServerId")
                         .HasColumnType("int");
 
@@ -296,10 +289,10 @@ namespace DataLayer.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("PaymentId")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.HasIndex("ServerId");
 
@@ -395,30 +388,22 @@ namespace DataLayer.Migrations
 
             modelBuilder.Entity("Entity.Payment", b =>
                 {
-                    b.HasOne("Entity.BillingInformation", "BillingInformation")
+                    b.HasOne("Entity.ShoppingCart", "ShoppingCart")
                         .WithMany()
-                        .HasForeignKey("BillingInformationId")
+                        .HasForeignKey("ShoppingCartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("BillingInformation");
+                    b.Navigation("ShoppingCart");
                 });
 
             modelBuilder.Entity("Entity.ServerRentalOrder", b =>
                 {
-                    b.HasOne("Entity.Payment", "Payment")
-                        .WithOne("ServerRentalOrder")
-                        .HasForeignKey("Entity.ServerRentalOrder", "PaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Entity.Server", "Server")
                         .WithMany()
                         .HasForeignKey("ServerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Payment");
 
                     b.Navigation("Server");
                 });
@@ -432,12 +417,6 @@ namespace DataLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Entity.Payment", b =>
-                {
-                    b.Navigation("ServerRentalOrder")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Entity.ShoppingCart", b =>

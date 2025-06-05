@@ -188,10 +188,13 @@
                             </ul>
                         </div>
                         <div class="card-footer text-end">
-                            <input type='button' class="btn btn-primary" value='پرداخت' id='click-payment'>
+                            <form asp-controller="Dashboard" asp-action="InitiatePayment" method="get">
+                                @* <input type="hidden" name="billingId" value="@Model.BillingInformation.Id" /> *@
+                                <input type="submit" class="btn btn-primary" value='پرداخت' id='click-payment'>
+                            </form>
                         </div>
                     </div>
-                   
+
                 </div>
             </div>
         </div>

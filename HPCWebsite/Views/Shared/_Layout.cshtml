@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject IConfiguration Configuration
+
+<!DOCTYPE html>
 <html lang="fa">
 
 <head>
@@ -55,14 +57,15 @@
 
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <li><a asp-controller="Dashboard" asp-action="Index" class="text-white"><span class="fa fa-user"></span> داشبورد , @User.FindFirst("FullName")?.Value</a></li>
+                    <li><a href="@Configuration["Urls:LoginRedirectUrl"]" class="text-white"><span class="fa fa-user"></span> داشبورد , @User.FindFirst("FullName")?.Value</a></li>
                     <li>
                         <a asp-controller="User" asp-action="Logout" class="text-white">خروج<span class="fa fa-right-from-bracket"></span>خروج</a>
                     </li>
                 }
                 else
                 {
-                    <li><a href="/user/login"><span class="fa fa-sign-out"></span> ورود / ثبت‌نام</a></li>
+                    <li><a href="/user/login"><span class="fa fa-sign-out"></span>  ثبت‌نام</a></li>
+                    <li><a href="@Configuration["Urls:LoginRedirectUrl"]"><span class="fa fa-user"></span>  ورود </a></li>
                 }
 
                 @* <li><a href="#"><span class="icon_chat_alt"></span> چت آنلاین</a></li> *@
