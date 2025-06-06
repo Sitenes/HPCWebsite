@@ -165,6 +165,28 @@ namespace HPCWebsite.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<ResultViewModel<object>> GetPriceApi()
+        {
+            try
+            {
+                var dashboardUserId = 0;
+                var tokenAuthorization = HttpContext.Request.Headers["Authorization"].ToString();
+                var claimsAuthorization = _tokenGenerator.ValidateToken(tokenAuthorization, false, false);
+                dashboardUserId = int.Parse(claimsAuthorization.FindFirstValue("UserId"));
+                var user = await _userService.GetByDashboardUserIdAsync(dashboardUserId);
+
+                var shoppingCart = await _shoppingCartService.GetUserCartAsync(user.Id);
+                
+                var totalPrice = shoppingCart.Total;
+                return new ResultViewModel<object>(new { shoppingCart, totalPrice, redirectUrl = Url.Action("Checkout", "Dashboard", null, Request.Scheme) });
+            }
+            catch
+            {
+                return new ResultViewModel<object>() { StatusCode = 302, Message = "خطا در به‌روزرسانی آیتم" };
+            }
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetCartItems()
