@@ -87,10 +87,9 @@ namespace Service
                     return await _context.HpcServers
                         .AsNoTracking()
                         .Where(s => s.Type == type)
-                        .OrderByDescending(s => s.IsPopular)
-                        .ThenBy(s => s.DailyPrice)
+                        .OrderBy(s => s.DailyPrice)
                         .ToListAsync();
-                }, TimeSpan.FromHours(1));
+                }, TimeSpan.FromHours(10));
             }
             catch (Exception ex)
             {

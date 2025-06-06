@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Service;
 using System.Reflection.PortableExecutable;
+using Tools.AuthoraizationTools;
 using ViewModel;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +41,7 @@ builder.Services.AddTransient<IZarinpalService, ZarinpalService>();
 builder.Services.AddTransient<IServerRentalService, ServerRentalService>();
 builder.Services.AddTransient<IServerService, ServerService>();
 builder.Services.AddTransient<IShoppingCartService, ShoppingCartService>();
+builder.Services.AddTransient<TokenGenerator>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

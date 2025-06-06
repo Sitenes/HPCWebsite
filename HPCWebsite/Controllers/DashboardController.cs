@@ -23,6 +23,7 @@ namespace HPCWebsite.Controllers
         private readonly IUserService _userManager;
         private readonly IShoppingCartService _cartService;
         private readonly IServerService _serverService;
+        private readonly TokenGenerator _tokenGenerator;
 
         public DashboardController(
             IBillingService billingService,
@@ -30,7 +31,8 @@ namespace HPCWebsite.Controllers
             IServerRentalService serverRentalService,
             IUserService userManager,
             IShoppingCartService cartService,
-            IServerService serverService
+            IServerService serverService,
+            TokenGenerator tokenGenerator
             )
         {
             _billingService = billingService;
@@ -39,6 +41,7 @@ namespace HPCWebsite.Controllers
             _userManager = userManager;
             _cartService = cartService;
             _serverService = serverService;
+            this._tokenGenerator = tokenGenerator;
         }
         public IActionResult Index()
         {
@@ -58,12 +61,12 @@ namespace HPCWebsite.Controllers
             return View(userServers);
 
         }
+        [AllowAnonymous]
         public async Task<ResultViewModel<List<HpcServerRentalOrder>>> GetServerRentalsApi()
         {
             var dashboardUserId = 0;
-            TokenGenerator TokenGeneratorService = new TokenGenerator();
             var tokenAuthorization = HttpContext.Request.Headers["Authorization"].ToString();
-            var claimsAuthorization = TokenGeneratorService.ValidateToken(tokenAuthorization, false, false);
+            var claimsAuthorization = _tokenGenerator.ValidateToken(tokenAuthorization, false, false);
             dashboardUserId = int.Parse(claimsAuthorization.FindFirstValue("UserId"));
 
             var user = await _userManager.GetByDashboardUserIdAsync(dashboardUserId);

@@ -20,11 +20,6 @@ namespace Tools.AuthoraizationTools
         {
             _configuration = configuration;
         }
-
-        public TokenGenerator()
-        {
-        }
-
         public string GenerateAccessToken(string userId, string? role)
         {
             var claims = new List<Claim> { new Claim("UserId", userId) };//TODO : ClaimsEnum
@@ -116,7 +111,7 @@ namespace Tools.AuthoraizationTools
             var audienceList = _configuration.GetSection("JWTSettings:Audience").GetChildren().Select(x => x.Value).ToArray();
                 //?? throw new CustomException("AppSettings", "JWTSettings:Audience");
 
-            var key = Encoding.UTF8.GetBytes(secretKey ?? "");
+            //var key = Encoding.UTF8.GetBytes(tokenSecret ?? "");
 
             try
             {
