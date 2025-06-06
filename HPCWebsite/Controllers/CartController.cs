@@ -113,61 +113,60 @@ namespace HPCWebsite.Controllers
                 return Json(new { success = false, message = "خطا در به‌روزرسانی آیتم" });
             }
         }
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<ResultViewModel<HpcCartItem>> UpdateItemApi(int rentalDays)
-        {
-            try
-            {
-                if (rentalDays < 1)
-                {
-                    return new ResultViewModel<HpcCartItem>() {StatusCode = 302, Message = "تعداد روز های اجاره معتبر نمی باشد" };
-                }
-
-                var dashboardUserId = 0;
-                var tokenAuthorization = HttpContext.Request.Headers["Authorization"].ToString();
-                var claimsAuthorization = _tokenGenerator.ValidateToken(tokenAuthorization, false, false);
-                dashboardUserId = int.Parse(claimsAuthorization.FindFirstValue("UserId"));
-                var user = await _userService.GetByDashboardUserIdAsync(dashboardUserId);
-
-                var cartItem = await _shoppingCartService.GetLastCartItemOfUserAsync(user.Id);
-                
-                return new ResultViewModel<HpcCartItem>(cartItem);
-            }
-            catch
-            {
-                return new ResultViewModel<HpcCartItem>() { StatusCode = 302, Message = "خطا در به‌روزرسانی آیتم" };
-            }
-        }
-
         //[AllowAnonymous]
         //[HttpGet]
-        //public async Task<IActionResult> UpdateItemApi(int rentalDays)
+        //public async Task<ResultViewModel<object>> UpdateItemApi(int rentalDays,int cartItemId)
         //{
         //    try
         //    {
+        //        if (rentalDays < 1)
+        //        {
+        //            //return new ResultViewModel<HpcCartItem>() {StatusCode = 302, Message = "تعداد روز های اجاره معتبر نمی باشد" };
+        //        }
+
         //        var dashboardUserId = 0;
         //        var tokenAuthorization = HttpContext.Request.Headers["Authorization"].ToString();
         //        var claimsAuthorization = _tokenGenerator.ValidateToken(tokenAuthorization, false, false);
         //        dashboardUserId = int.Parse(claimsAuthorization.FindFirstValue("UserId"));
+        //        var user = await _userService.GetByDashboardUserIdAsync(dashboardUserId);
 
+        //        await _shoppingCartService.UpdateCartItemAsync(user.Id, cartItemId, rentalDays);
 
-        //        if (rentalDays < 1)
-        //        {
-        //            return Json(new { success = false, message = "تعداد روز اجاره معتبر نیست" });
-        //        }
-
-        //        await _shoppingCartService.UpdateCartItemAsync(userId, itemId, rentalDays);
-
-
-        //        return Json(new { success = true, message = "آیتم مورد نظر یافت نشد یا به‌روزرسانی نشد" });
+        //        return new ResultViewModel<object>(new { redirectUrl = Url.Action("Login", "User") });
         //    }
         //    catch
         //    {
-        //        return Json(new { success = false, message = "خطا در به‌روزرسانی آیتم" });
+        //        //return new ResultViewModel<HpcCartItem>() { StatusCode = 302, Message = "خطا در به‌روزرسانی آیتم" };
         //    }
         //}
 
+        //[AllowAnonymous]
+        //[HttpGet]
+        //public async Task<ResultViewModel<HpcCartItem>> UpdateItemApi(int rentalDays)
+        //{
+        //    try
+        //    {
+        //        if (rentalDays < 1)
+        //        {
+        //            return new ResultViewModel<HpcCartItem>() { StatusCode = 302, Message = "تعداد روز های اجاره معتبر نمی باشد" };
+        //        }
+
+        //        var dashboardUserId = 0;
+        //        var tokenAuthorization = HttpContext.Request.Headers["Authorization"].ToString();
+        //        var claimsAuthorization = _tokenGenerator.ValidateToken(tokenAuthorization, false, false);
+        //        dashboardUserId = int.Parse(claimsAuthorization.FindFirstValue("UserId"));
+        //        var user = await _userService.GetByDashboardUserIdAsync(dashboardUserId);
+
+        //        var cartItem = await _shoppingCartService.GetLastCartItemOfUserAsync(user.Id);
+
+        //        return new ResultViewModel<HpcCartItem>(cartItem);
+        //    }
+        //    catch
+        //    {
+        //        return new ResultViewModel<HpcCartItem>() { StatusCode = 302, Message = "خطا در به‌روزرسانی آیتم" };
+        //    }
+        //}
+       
 
         [HttpGet]
         public async Task<IActionResult> GetCartItems()

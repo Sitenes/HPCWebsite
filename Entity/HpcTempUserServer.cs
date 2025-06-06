@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities.Models.MainEngine;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,7 +14,7 @@ namespace Entity
         public int Id { get; set; }
         public int UserId { get; set; }
         [ForeignKey(nameof(UserId))]
-        public HpcUser? User { get; set; }
+        public User? User { get; set; }
 
         public int ServerId { get; set; }
         [ForeignKey(nameof(ServerId))]
