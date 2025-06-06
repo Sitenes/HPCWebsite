@@ -65,10 +65,7 @@ namespace Service
             if (!await IsMobileUniqueAsync(user.Mobile) || await _context.User.AnyAsync(x => x.UserName == user.Mobile.ToString()))
                 throw new InvalidOperationException("شماره موبایل تکراری است");
 
-            var workflowUser = new Entities.Models.Workflows.Workflow_User { WorkflowId = 1, UserId = dashboardUserId };
-            await _basicContext.Workflow_User.AddAsync(workflowUser);
-            await _context.SaveChangesAsync();
-            user.WorkflowUserId = workflowUser.Id;
+            
 
             user.CreatedAt = DateTime.Now;
             var dashboardUser = new Entities.Models.MainEngine.User
@@ -80,9 +77,14 @@ namespace Service
             await _context.SaveChangesAsync();
             user.UserId = dashboardUser.Id;
             await _context.HpcUsers.AddAsync(user);
-           
-           
             await _context.SaveChangesAsync();
+
+            var workflowUser = new Entities.Models.Workflows.Workflow_User { WorkflowId = 1, UserId = user.UserId };
+            await _basicContext.Workflow_User.AddAsync(workflowUser);
+            await _basicContext.SaveChangesAsync();
+            user.WorkflowUserId = workflowUser.Id;
+            await _context.SaveChangesAsync();
+            
             return user;
         }
 

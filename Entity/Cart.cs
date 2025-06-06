@@ -33,21 +33,26 @@ namespace Entity
     public class HpcCartItem
     {
         public int Id { get; set; }
-        public int ShoppingCartId { get; set; }
-        public HpcShoppingCart ShoppingCart { get; set; }
-
-        public int ServerId { get; set; }
-        public string ServerName { get; set; }
-        public string ServerSpecs { get; set; }
-        public string ImageUrl { get; set; }
 
         public int RentalDays { get; set; }
         public decimal DailyPrice { get; set; }
+        public DateTime StartDate { get; set; }
 
         [NotMapped]
         public decimal TotalPrice => DailyPrice * RentalDays;
 
         public DateTime AddedAt { get; set; } = DateTime.Now;
         public int? WorkflowUserId { get; set; }
+
+        public int ServerId { get; set; }
+        [ForeignKey(nameof(ServerId))]
+        public HpcServer? Server { get; set; }
+
+        public int ShoppingCartId { get; set; }
+
+        [ForeignKey(nameof(ShoppingCartId))]
+        public HpcShoppingCart? ShoppingCart { get; set; }
+
+
     }
 }

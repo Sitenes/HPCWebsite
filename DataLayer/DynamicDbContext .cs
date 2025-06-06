@@ -13,6 +13,7 @@ namespace DataLayer.DbContext
         public DbSet<HpcBillingInformation> HpcBillingInformations { get; set; }
         public DbSet<HpcPayment> HpcPayments { get; set; }
         public DbSet<HpcServer> HpcServers { get; set; }
+        public DbSet<HpcTempUserServer> HpcTempUserServers { get; set; }
         public DbSet<HpcServerRentalOrder> HpcServerRentalOrders { get; set; }
         public DbSet<HpcShoppingCart> HpcShoppingCarts { get; set; }
         public DbSet<HpcCartItem> HpcCartItems { get; set; }

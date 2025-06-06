@@ -109,7 +109,7 @@ namespace Service
                 };
 
                 await _basicContext.Workflow_User.AddAsync(workflowUser);
-                await _context.SaveChangesAsync();
+                await _basicContext.SaveChangesAsync();
                 server.WorkflowUserId = workflowUser.Id;
 
                 await _context.HpcServers.AddAsync(server);

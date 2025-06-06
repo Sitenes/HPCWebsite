@@ -19,6 +19,7 @@ namespace Service
         Task UpdateCartItemAsync(int userId, int itemId, int rentalDays);
         Task ClearCartAsync(int userId);
         Task<int> GetCartItemCountAsync(int userId);
+        Task<HpcCartItem> GetLastCartItemOfUserAsync(int userId);
     }
 
     public class ShoppingCartService : IShoppingCartService
@@ -42,9 +43,9 @@ namespace Service
 
         public async Task<HpcShoppingCart> GetUserCartAsync(int userId)
         {
-            var cart = await _context.HpcShoppingCarts.Include(x=>x.Payments)
-                .Include(c => c.Items)
-                .FirstOrDefaultAsync(c => c.UserId == userId && !c.Payments.Any(x=>x.Status == PaymentStatus.Completed));
+            var cart = await _context.HpcShoppingCarts.Include(x => x.Payments)
+                .Include(c => c.Items).ThenInclude(x => x.Server)
+                .FirstOrDefaultAsync(c => c.UserId == userId && !c.Payments.Any(x => x.Status == PaymentStatus.Completed));
 
             if (cart == null)
             {
@@ -53,6 +54,14 @@ namespace Service
                 await _context.HpcShoppingCarts.AddAsync(cart);
                 await _context.SaveChangesAsync();
             }
+            return cart;
+        }
+
+        public async Task<HpcCartItem> GetLastCartItemOfUserAsync(int userId)
+        {
+            var cart = await _context.HpcCartItems.Include(x => x.ShoppingCart).OrderByDescending(x => x.AddedAt)
+                .FirstOrDefaultAsync(c => c.ShoppingCart.UserId == userId);
+
             return cart;
         }
 
@@ -81,9 +90,7 @@ namespace Service
                 cart.Items.Add(new HpcCartItem
                 {
                     ServerId = serverId,
-                    ServerName = server.Name,
-                    ServerSpecs = server.Specifications,
-                    ImageUrl = $"/images/servers/{serverId}.jpg",
+                    AddedAt = DateTime.Now,
                     DailyPrice = server.DailyPrice,
                     RentalDays = rentalDays,
                     WorkflowUserId = wkID
