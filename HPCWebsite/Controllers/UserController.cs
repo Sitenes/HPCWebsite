@@ -45,7 +45,7 @@ namespace HPCWebsite.Controllers
             else
             {
                 var redirectUrl = _configuration["AppSettings:LoginRedirectUrl"];
-                Redirect(redirectUrl);
+                return Redirect(redirectUrl);
             }
                 var code = await _userService.GenerateVerificationCodeAsync(mobile);
             await _userService.SaveChangesAsync();
@@ -134,7 +134,8 @@ namespace HPCWebsite.Controllers
             // به‌روزرسانی اطلاعات کاربر در کوکی
             await UpdateUserClaims(createdUser);
 
-            return RedirectToAction("Index", "Dashboard");
+            var redirectUrl = _configuration["AppSettings:LoginRedirectUrl"];
+            return Redirect(redirectUrl);
         }
         [Authorize]
         public async Task<IActionResult> Logout()

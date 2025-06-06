@@ -21,6 +21,7 @@ namespace Service
         Task<string> GenerateVerificationCodeAsync(long mobile);
         Task<bool> VerifyCodeAsync(long mobile, string code);
         Task<HpcUser> LoginAsync(long mobile);
+        Task<HpcUser?> GetByDashboardUserIdAsync(int dashboardUserId);
         Task SaveChangesAsync();
     }
     public class UserService : IUserService
@@ -43,6 +44,10 @@ namespace Service
             return await _context.HpcUsers.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<HpcUser?> GetByDashboardUserIdAsync(int dashboardUserId)
+        {
+            return await _context.HpcUsers.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == dashboardUserId);
+        }
         public async Task<HpcUser?> GetByMobileAsync(long mobile)
         {
             return await _context.HpcUsers.FirstOrDefaultAsync(u => u.Mobile == mobile);

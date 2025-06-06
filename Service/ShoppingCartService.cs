@@ -42,9 +42,9 @@ namespace Service
 
         public async Task<HpcShoppingCart> GetUserCartAsync(int userId)
         {
-            var cart = await _context.HpcShoppingCarts
+            var cart = await _context.HpcShoppingCarts.Include(x=>x.Payments)
                 .Include(c => c.Items)
-                .FirstOrDefaultAsync(c => c.UserId == userId);
+                .FirstOrDefaultAsync(c => c.UserId == userId && !c.Payments.Any(x=>x.Status == PaymentStatus.Completed));
 
             if (cart == null)
             {
@@ -53,13 +53,6 @@ namespace Service
                 await _context.HpcShoppingCarts.AddAsync(cart);
                 await _context.SaveChangesAsync();
             }
-
-            // محاسبه تخفیف (مثال: 5% تخفیف برای بیش از 2 آیتم)
-            if (cart.Items.Count > 2)
-            {
-                cart.DiscountAmount = cart.SubTotal * 0.05m;
-            }
-
             return cart;
         }
 

@@ -1,4 +1,6 @@
-﻿@{
+﻿@using HPCWebsite.Controllers
+@model ServerPlansViewModel
+@{
     ViewData["Title"] = "پلن ها";
 }
 <!-- مسیر راهنمایی آغاز -->
@@ -16,7 +18,6 @@
     </div>
 </div>
 <!-- مسیر راهنمایی پایان -->
-
 <!-- Hosting Section Begin -->
 <section class="hosting-section spad">
     <div class="container">
@@ -52,286 +53,242 @@
                                                     <div class="chose__title">پلن مناسب خود را انتخاب کنید</div>
                                                 </div>
                                             </th>
-                                            <th>
-                                                <div class="hosting__feature--plan normal-plan">
-                                                    <div class="plan__title">پلن پایه</div>
-                                                    <div class="hosting__feature--price">
-                                                        <div class="plan__price">۳۶,۰۰۰</div>
-                                                        <span>تومان (روزانه)</span>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                var index = Model.CPUServers.IndexOf(server);
+                                                <th>
+                                                    <div class="hosting__feature--plan @(index == 2 ? "popular-plan" : "normal-plan")">
+                                                        @if (index == 2)
+                                                        {
+                                                            <div class="popular-badge">
+                                                                <span class="badge-text">پرفروش‌ترین</span>
+                                                                <span class="badge-icon flame-icon">🔥</span>
+                                                            </div>
+                                                        }
+                                                        <div class="plan__title">@server.Name</div>
+                                                        <div class="hosting__feature--price">
+                                                            <div class="plan__price">@server.DailyPrice.ToString("N0")</div>
+                                                            <span>تومان (روزانه)</span>
+                                                        </div>
+                                                        <a href="#" class="primary-btn add-to-cart" data-server-id="@server.Id">رزرو</a>
                                                     </div>
-                                                    <a href="#" class="primary-btn add-to-cart" data-server-id="9">رزرو</a>
-                                                </div>
-                                            </th>
-                                            <th>
-                                                <div class="hosting__feature--plan popular-plan">
-                                                    <div class="popular-badge">
-                                                        <span class="badge-text">پرفروش‌ترین</span>
-                                                        <span class="badge-icon flame-icon">🔥</span>
-                                                    </div>
-                                                    <div class="plan__title">پلن حرفه‌ای</div>
-                                                    <div class="hosting__feature--price">
-                                                        <div class="plan__price">۷۲,۰۰۰</div>
-                                                        <span class="price-period">تومان (روزانه)</span>
-                                                    </div>
-                                                    <a href="#" class="primary-btn add-to-cart" data-server-id="2">رزرو</a>
-                                                </div>
-                                            </th>
-                                            <th>
-                                                <div class="hosting__feature--plan normal-plan">
-                                                    <div class="plan__title">پلن قدرتمند</div>
-                                                    <div class="hosting__feature--price">
-                                                        <div class="plan__price">۱۴۴,۰۰۰</div>
-                                                        <span>تومان (روزانه)</span>
-                                                    </div>
-                                                    <a href="#" class="primary-btn add-to-cart" data-server-id="3">رزرو</a>
-                                                </div>
-
-                                            </th>
-                                            <th>
-                                                <div class="hosting__feature--plan normal-plan">
-                                                    <div class="plan__title">پلن فوق‌سنگین</div>
-                                                    <div class="hosting__feature--price">
-                                                        <div class="plan__price">۲۸۸,۰۰۰</div>
-                                                        <span>تومان (روزانه)</span>
-                                                    </div>
-                                                    <a href="#" class="primary-btn add-to-cart" data-server-id="4">رزرو</a>
-                                                </div>
-                                            </th>
+                                                </th>
+                                            }
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td class="hosting__feature--item">مناسب برای</td>
-                                            <td class="hosting__feature--info">پردازش‌های سبک، توسعه نرم‌افزار، سرورهای تست و آموزشی</td>
-                                            <td class="hosting__feature--info">پروژه‌های تحقیقاتی و تولیدی</td>
-                                            <td class="hosting__feature--info">تحلیل‌های پیچیده</td>
-                                            <td class="hosting__feature--info">پروژه‌های صنعتی و علمی</td>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.SuitableFor</td>
+                                            }
                                         </tr>
                                         <tr>
                                             <td class="hosting__feature--item">پردازنده</td>
-                                            <td class="hosting__feature--info">10 Core(Logical)</td>
-                                            <td class="hosting__feature--info">20 Core(Logical)</td>
-                                            <td class="hosting__feature--info">40 Core(Logical)</td>
-                                            <td class="hosting__feature--info">80 Core(Logical)</td>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@(server.Cores) هسته</td>
+                                            }
                                         </tr>
                                         <tr>
                                             <td class="hosting__feature--item">حافظه رم</td>
-                                            <td class="hosting__feature--info">۱۵ گیگابایت DDR4</td>
-                                            <td class="hosting__feature--info">۳۰ گیگابایت DDR4</td>
-                                            <td class="hosting__feature--info">۶۰ گیگابایت DDR4</td>
-                                            <td class="hosting__feature--info">۱۲۰ گیگابایت DDR4</td>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@(server.RamGB) گیگابایت</td>
+                                            }
                                         </tr>
                                         <tr>
                                             <td class="hosting__feature--item">ذخیره‌سازی</td>
-                                            <td class="hosting__feature--info">۲۰۰ گیگابایت HDD </td>
-                                            <td class="hosting__feature--info">۴۰۰ گیگابایت HDD </td>
-                                            <td class="hosting__feature--info">۴۰۰ گیگابایت HDD </td>
-                                            <td class="hosting__feature--info">۴۰۰ گیگابایت HDD </td>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@(server.StorageGB) گیگابایت</td>
+                                            }
                                         </tr>
                                         <tr>
                                             <td class="hosting__feature--item">پهنای باند</td>
-                                            <td class="hosting__feature--info">۱ Gb/s</td>
-                                            <td class="hosting__feature--info">۱ Gb/s</td>
-                                            <td class="hosting__feature--info">۱ Gb/s</td>
-                                            <td class="hosting__feature--info">۱ Gb/s</td>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.Bandwidth</td>
+                                            }
                                         </tr>
                                         <tr>
                                             <td class="hosting__feature--item">فایروال اختصاصی</td>
-                                           @*  <td class="hosting__feature--close"><span class="fa fa-times-circle-o"></span></td> *@
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                <td class="@(server.HasFirewall ? "hosting__feature--check" : "hosting__feature--close")">
+                                                    <span class="fa @(server.HasFirewall ? "fa-check-circle-o" : "fa-times-circle-o")"></span>
+                                                </td>
+                                            }
                                         </tr>
-  
                                         <tr>
                                             <td class="hosting__feature--item">دسترسی روت کامل <br /> پنل مدیریت</td>
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                <td class="@(server.HasRootAccess ? "hosting__feature--check" : "hosting__feature--close")">
+                                                    <span class="fa @(server.HasRootAccess ? "fa-check-circle-o" : "fa-times-circle-o")"></span>
+                                                </td>
+                                            }
                                         </tr>
                                         <tr>
                                             <td class="hosting__feature--item">پشتیبانی</td>
-                                            <td class="hosting__feature--info">از طریق تیکت، اولویت کم</td>
-                                            <td class="hosting__feature--info">۲۴/۷ از طریق تیکت، اولویت متوسط</td>
-                                            <td class="hosting__feature--info">۲۴/۷ از طریق تیکت، تماس اضطراری، اولویت متوسط</td>
-                                            <td class="hosting__feature--info">۲۴/۷ از طریق تیکت، تماس اضطراری، اولویت بالا</td>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.SupportLevel</td>
+                                            }
                                         </tr>
                                         <tr>
                                             <td class="hosting__feature--item">سرعت پردازش</td>
-                                            <td class="hosting__feature--info">✔ سرعت فوق‌العاده </td>
-                                            <td class="hosting__feature--info">✔ سرعت فوق‌العاده </td>
-                                            <td class="hosting__feature--info">✔ سرعت فوق‌العاده </td>
-                                            <td class="hosting__feature--info">✔ سرعت فوق‌العاده </td>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.ProcessingSpeed</td>
+                                            }
                                         </tr>
                                         <tr>
-                                            <td class="hosting__feature--item"> ۹۹.۹٪ آپتایم</td>
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
+                                            <td class="hosting__feature--item">۹۹.۹٪ آپتایم</td>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.Uptime</td>
+                                            }
                                         </tr>
                                         <tr>
                                             <td class="hosting__feature--item">زمان تحویل</td>
-                                            <td class="hosting__feature--info">✔ تحویل فوری <br /> (کمتر از ۱۵ دقیقه)</td>
-                                            <td class="hosting__feature--info">✔ تحویل فوری <br /> (کمتر از ۱۵ دقیقه)</td>
-                                            <td class="hosting__feature--info">✔ تحویل فوری <br /> (کمتر از ۱۵ دقیقه)</td>
-                                            <td class="hosting__feature--info">✔ تحویل فوری <br /> (کمتر از ۱۵ دقیقه)</td>
+                                            @foreach (var server in Model.CPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.DeliveryTime</td>
+                                            }
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                         <div class="tab-pane" id="tabs-2" role="tabpanel">
-                            <div class="tab-pane active" id="tabs-1" role="tabpanel">
-                                <div class="hosting__feature__table">
-                                    <table>
-                                        <thead>
-                                            <tr>
+                            <div class="hosting__feature__table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <div class="hosting__feature__plan--choose">
+                                                    <span>تمام ویژگی‌های سرور پردازش سریع</span>
+                                                    <div class="chose__title">پلن مناسب خود را انتخاب کنید</div>
+                                                </div>
+                                            </th>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                var index = Model.GPUServers.IndexOf(server);
                                                 <th>
-                                                    <div class="hosting__feature__plan--choose">
-                                                        <span>تمام ویژگی‌های سرور پردازش سریع</span>
-                                                        <div class="chose__title">پلن مناسب خود را انتخاب کنید</div>
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="hosting__feature--plan normal-plan">
-                                                        <div class="plan__title">پلن پایه</div>
+                                                    <div class="hosting__feature--plan @(index == 2 ? "popular-plan" : "normal-plan")">
+                                                        @if (index == 2)
+                                                        {
+                                                            <div class="popular-badge">
+                                                                <span class="badge-text">پرفروش‌ترین</span>
+                                                                <span class="badge-icon flame-icon">🔥</span>
+                                                            </div>
+                                                        }
+                                                        <div class="plan__title">@server.Name</div>
                                                         <div class="hosting__feature--price">
-                                                            <div class="plan__price">۴۰۰,۰۰۰</div>
+                                                            <div class="plan__price">@server.DailyPrice.ToString("N0")</div>
                                                             <span>تومان (روزانه)</span>
                                                         </div>
-                                                        <a href="#" class="primary-btn add-to-cart" data-server-id="5">رزرو</a>
+                                                        <a href="#" class="primary-btn add-to-cart" data-server-id="@server.Id">رزرو</a>
                                                     </div>
                                                 </th>
-                                                <th>
-                                                    <div class="hosting__feature--plan popular-plan">
-                                                        <div class="popular-badge">
-                                                            <span class="badge-text">پرفروش‌ترین</span>
-                                                            <span class="badge-icon flame-icon">🔥</span>
-                                                        </div>
-                                                        <div class="plan__title">پلن حرفه‌ای</div>
-                                                        <div class="hosting__feature--price">
-                                                            <div class="plan__price">۶۰۰,۰۰۰</div>
-                                                            <span class="price-period">تومان (روزانه)</span>
-                                                        </div>
-                                                        <a href="#" class="primary-btn add-to-cart" data-server-id="6">رزرو</a>
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="hosting__feature--plan normal-plan">
-                                                        <div class="plan__title">پلن قدرتمند</div>
-                                                        <div class="hosting__feature--price">
-                                                            <div class="plan__price">۱,۰۰۰,۰۰۰</div>
-                                                            <span>تومان (روزانه)</span>
-                                                        </div>
-                                                        <a href="#" class="primary-btn add-to-cart" data-server-id="7">رزرو</a>
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <div class="hosting__feature--plan normal-plan">
-                                                        <div class="plan__title">پلن فوق‌سنگین</div>
-                                                        <div class="hosting__feature--price">
-                                                            <div class="plan__price">۱,۸۰۰,۰۰۰</div>
-                                                            <span>تومان (روزانه)</span>
-                                                        </div>
-                                                        <a href="#" class="primary-btn add-to-cart" data-server-id="8">رزرو</a>
-                                                    </div>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="hosting__feature--item">مناسب برای</td>
-                                                <td class="hosting__feature--info">پردازش تصویر، ویدیو و مدل‌های ML</td>
-                                                <td class="hosting__feature--info">یادگیری عمیق، هوش مصنوعی</td>
-                                                <td class="hosting__feature--info">پروژه‌های یادگیری ماشین پیشرفته</td>
-                                                <td class="hosting__feature--info">پروژه‌های پیشرفته هوش مصنوعی</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hosting__feature--item">پردازنده گرافیکی</td>
-                                                <td class="hosting__feature--info">RTX 2080Ti</td>
-                                                <td class="hosting__feature--info">RTX 3090</td>
-                                                <td class="hosting__feature--info">Tesla A100 (۴۰GB)</td>
-                                                <td class="hosting__feature--info">Tesla A100 (۸۰GB)</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hosting__feature--item">هسته CPU</td>
-                                                <td class="hosting__feature--info">-</td>
-                                                <td class="hosting__feature--info">-</td>
-                                                <td class="hosting__feature--info">۷۰ هسته منطقی</td>
-                                                <td class="hosting__feature--info">۱۴۰ هسته منطقی</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hosting__feature--item">حافظه رم</td>
-                                                <td class="hosting__feature--info">-</td>
-                                                <td class="hosting__feature--info">-</td>
-                                                <td class="hosting__feature--info">۳۶۰ گیگابایت</td>
-                                                <td class="hosting__feature--info">۷۶۰ گیگابایت</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hosting__feature--item">ذخیره‌سازی</td>
-                                                <td class="hosting__feature--info">-</td>
-                                                <td class="hosting__feature--info">-</td>
-                                                <td class="hosting__feature--info">۱ ترابایت</td>
-                                                <td class="hosting__feature--info">۲ ترابایت</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hosting__feature--item">پهنای باند</td>
-                                                <td class="hosting__feature--info">۱ Gb/s</td>
-                                                <td class="hosting__feature--info">۱ Gb/s</td>
-                                                <td class="hosting__feature--info">۱ Gb/s</td>
-                                                <td class="hosting__feature--info">۱ Gb/s</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hosting__feature--item">فایروال اختصاصی</td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hosting__feature--item">دسترسی روت کامل <br /> پنل مدیریت</td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hosting__feature--item">پشتیبانی</td>
-                                                <td class="hosting__feature--info">از طریق تیکت، اولویت کم</td>
-                                                <td class="hosting__feature--info">۲۴/۷ از طریق تیکت، اولویت متوسط</td>
-                                                <td class="hosting__feature--info">۲۴/۷ از طریق تیکت، تماس اضطراری، اولویت متوسط</td>
-                                                <td class="hosting__feature--info">۲۴/۷ از طریق تیکت، تماس اضطراری، اولویت بالا</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hosting__feature--item">سرعت پردازش</td>
-                                                <td class="hosting__feature--info">سرعت و کارایی بالا برای پروژه‌های متوسط</td>
-                                                <td class="hosting__feature--info">قدرت بی‌نظیر در پردازش‌های سنگین</td>
-                                                <td class="hosting__feature--info">مناسب محاسبات سنگین</td>
-                                                <td class="hosting__feature--info">بهترین برای پردازش‌های فوق سنگین</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hosting__feature--item"> ۹۹.۹٪ آپتایم</td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                                <td class="hosting__feature--check"><span class="fa fa-check-circle-o"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hosting__feature--item">زمان تحویل</td>
-                                                <td class="hosting__feature--info">✔ تحویل فوری <br /> (کمتر از ۱۵ دقیقه)</td>
-                                                <td class="hosting__feature--info">✔ تحویل فوری <br /> (کمتر از ۱۵ دقیقه)</td>
-                                                <td class="hosting__feature--info">✔ تحویل فوری <br /> (کمتر از ۱۵ دقیقه)</td>
-                                                <td class="hosting__feature--info">✔ تحویل فوری <br /> (کمتر از ۱۵ دقیقه)</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="hosting__feature--item">مناسب برای</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.SuitableFor</td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="hosting__feature--item">پردازنده گرافیکی</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.GpuType (@server.GpuCount واحد)</td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="hosting__feature--item">هسته CPU</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@(server.Cores > 0 ? $"{server.Cores} هسته" : "-")</td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="hosting__feature--item">حافظه رم</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@(server.RamGB > 0 ? $"{server.RamGB} گیگابایت" : "-")</td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="hosting__feature--item">ذخیره‌سازی</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@(server.StorageGB > 0 ? $"{server.StorageGB} گیگابایت" : "-")</td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="hosting__feature--item">پهنای باند</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.Bandwidth</td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="hosting__feature--item">فایروال اختصاصی</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="@(server.HasFirewall ? "hosting__feature--check" : "hosting__feature--close")">
+                                                    <span class="fa @(server.HasFirewall ? "fa-check-circle-o" : "fa-times-circle-o")"></span>
+                                                </td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="hosting__feature--item">دسترسی روت کامل <br /> پنل مدیریت</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="@(server.HasRootAccess ? "hosting__feature--check" : "hosting__feature--close")">
+                                                    <span class="fa @(server.HasRootAccess ? "fa-check-circle-o" : "fa-times-circle-o")"></span>
+                                                </td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="hosting__feature--item">پشتیبانی</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.SupportLevel</td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="hosting__feature--item">سرعت پردازش</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.ProcessingSpeed</td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="hosting__feature--item">۹۹.۹٪ آپتایم</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.Uptime</td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td class="hosting__feature--item">زمان تحویل</td>
+                                            @foreach (var server in Model.GPUServers)
+                                            {
+                                                <td class="hosting__feature--info">@server.DeliveryTime</td>
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                       
                     </div>
                 </div>
             </div>
@@ -356,10 +313,9 @@
                     <h4 class="form-title"><b>فرم درخواست مشاوره رایگان</b></h4>
                     <br />
                     <p class="form-subtitle">کارشناسان ما در کمتر از ۲ ساعت پاسخ خواهند داد</p>
-
                     <input type="text" placeholder="نام و نام خانوادگی" required>
                     <input type="email" placeholder="ایمیل " required>
-                    <input type="tel rtl" placeholder="شماره تماس" required>
+                    <input type="tel" class="rtl" placeholder="شماره تماس" required>
                     <select required>
                         <option value="" disabled selected>نوع درخواست</option>
                         <option value="consulting">مشاوره انتخاب پلن</option>
@@ -368,10 +324,7 @@
                         <option value="other">سایر موارد</option>
                     </select>
                     <textarea placeholder="توضیحات و نیازهای شما" required></textarea>
-
                     <button type="submit" class="site-btn">ارسال درخواست</button>
-
-
                 </form>
             </div>
             <div class="col-lg-6">
@@ -465,7 +418,6 @@
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 </section>
@@ -477,7 +429,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="rentalDaysModalLabel">انتخاب مدت اجاره</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -488,7 +440,6 @@
                 <div id="pricePreview" class="mt-3"></div>
             </div>
             <div class="modal-footer">
-
                 <button type="button" class="primary-btn add-to-cart" id="confirmRental">تایید و افزودن به سبد خرید</button>
             </div>
         </div>
@@ -524,36 +475,35 @@
                 addToCart(serverId, rentalDays);
             });
 
-                   function addToCart(serverId, rentalDays) {
-            $.ajax({
-                url: '/Cart/AddToCart',
-                type: 'POST',
-                data: {
-                    serverId: serverId,
-                    rentalDays: rentalDays
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // toastr.success('سرور با موفقیت به سبد خرید اضافه شد');
-                        $('#cartItemsCount').text(response.cartItemCount);
-                        $('#rentalDaysModal').modal('hide');
+            function addToCart(serverId, rentalDays) {
+                $.ajax({
+                    url: '/Cart/AddToCart',
+                    type: 'POST',
+                    data: {
+                        serverId: serverId,
+                        rentalDays: rentalDays
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // toastr.success('سرور با موفقیت به سبد خرید اضافه شد');
+                            $('#cartItemsCount').text(response.cartItemCount);
+                            $('#rentalDaysModal').modal('hide');
 
-                        // بررسی وجود redirectUrl پس از موفقیت
-                        if (response.redirectUrl) {
-                            setTimeout(() => {
-                                window.location.href = response.redirectUrl;
-                            }, 1000); // صبر ۱ ثانیه برای نمایش نوتیفیکیشن
+                            // بررسی وجود redirectUrl پس از موفقیت
+                            if (response.redirectUrl) {
+                                setTimeout(() => {
+                                    window.location.href = response.redirectUrl;
+                                }, 1000); // صبر ۱ ثانیه برای نمایش نوتیفیکیشن
+                            }
+                        } else {
+                            // toastr.error(response.message);
                         }
-                    } else {
-                        // toastr.error(response.message);
+                    },
+                    error: function() {
+                        // toastr.error('خطا در ارتباط با سرور');
                     }
-                },
-                error: function() {
-                    // toastr.error('خطا در ارتباط با سرور');
-                }
-            });
-        }
-
+                });
+            }
         });
     </script>
 }

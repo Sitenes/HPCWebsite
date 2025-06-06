@@ -65,7 +65,7 @@ namespace Service
         public async Task<HpcPayment> VerifyPaymentAsync(string transactionId)
         {
             var payment = await _context.HpcPayments
-                .Include(p => p.ShoppingCart)
+                .Include(p => p.ShoppingCart.Items)
                 .FirstOrDefaultAsync(p => p.TransactionId == transactionId);
 
             if (payment == null)

@@ -1,4 +1,6 @@
-﻿@{
+﻿@using HPCWebsite.Controllers
+@model ServerPlansViewModel
+@{
     ViewData["Title"] = "خانه";
 }
 <!-- Hero Section Begin -->
@@ -74,7 +76,7 @@
                 <div class="pricing__swipe-btn">
                     <label for="month" class="active">
                         CPU
-                        <input type="radio" id="month">
+                        <input type="radio" id="month" checked>
                     </label>
                     <label for="yearly">
                         GPU
@@ -84,147 +86,139 @@
             </div>
             <div class="col-lg-7 col-md-7">
                 <div class="section-title normal-title">
-                    <p>سرور های پردازش سریع، فقط چند کلیک با شما فاصله دارد</p>
+                    <p>سرورهای پردازش سریع، فقط چند کلیک با شما فاصله دارند</p>
                     <h3>طرح مناسب خود را انتخاب کنید</h3>
                 </div>
             </div>
         </div>
 
         <div class="row monthly__plans active">
-            <!-- پلن 1 -->
-            <div class="col-lg-3 col-sm-6">
-                <div class="pricing__item">
-                    <h4>پلن پایه</h4>
-                    <h5>۳۶,۰۰۰ روزانه / تومان</h5>
-                    <ul>
-                        <li>۱۰ هسته پردازشی منطقی</li>
-                        <li>۱۵ گیگابایت رم</li>
-                        <li>۲۰۰ گیگابایت فضای HDD</li>
-                        <li>مناسب کارهای سبک و آموزش</li>
-                    </ul>
-                    <a href="#" class="primary-btn add-to-cart" data-server-id="9">رزرو</a>
+            @{
+                int index = 0;
+            }
+            @foreach (var server in Model.CPUServers)
+            {
+                var isPopular = index == 2 ? " popular" : "";
+                <div class="col-lg-3 col-sm-6">
+                    <div class="pricing__item @isPopular">
+                        @if (index == 2)
+                        {
+                            <div class="popular-badge">
+                                <span class="badge-text">پرفروش‌ترین</span>
+                                <span class="badge-icon flame-icon">🔥</span>
+                            </div>
+                        }
+                        <h4>@server.Name</h4>
+                        <h5>@server.DailyPrice.ToString("N0") تومان (روزانه)</h5>
+                        <ul>
+                            @if (server.Cores > 0)
+                            {
+                                <li>پردازنده: @(server.Cores) هسته</li>
+                            }
+                            @if (server.RamGB > 0)
+                            {
+                                <li>حافظه رم: @(server.RamGB) گیگابایت</li>
+                            }
+                            @if (server.StorageGB > 0)
+                            {
+                                <li>ذخیره‌سازی: @(server.StorageGB) گیگابایت</li>
+                            }
+                            @if (!string.IsNullOrEmpty(server.Uptime) && server.Uptime != "-")
+                            {
+                                <li>آپتایم: @server.Uptime</li>
+                            }
+                            @if (!string.IsNullOrEmpty(server.DeliveryTime) && server.DeliveryTime != "-")
+                            {
+                                <li>زمان تحویل: @server.DeliveryTime</li>
+                            }
+                            @if (!string.IsNullOrEmpty(server.ProcessingSpeed) && server.ProcessingSpeed != "-")
+                            {
+                                <li>سرعت پردازش: @server.ProcessingSpeed</li>
+                            }
+                            @if (!string.IsNullOrEmpty(server.SuitableFor) && server.SuitableFor != "-")
+                            {
+                                <li>مناسب برای: @server.SuitableFor</li>
+                            }
+                        </ul>
+                        <a href="#" class="primary-btn add-to-cart" data-server-id="@server.Id">رزرو</a>
+                    </div>
                 </div>
-            </div>
-
-            <!-- پلن 2 - پرفروش‌ترین -->
-            <div class="col-lg-3 col-sm-6">
-                <div class="pricing__item popular">
-                    <h4>پلن حرفه‌ای</h4>
-                    <h5>۷۲,۰۰۰ روزانه / تومان</h5>
-                    <ul>
-                        <li>۲۰ هسته پردازشی منطقی</li>
-                        <li>۳۰ گیگابایت رم</li>
-                        <li>۴۰۰ گیگابایت فضای HDD</li>
-                        <li>مناسب پروژه‌های تحقیقاتی و تولیدی</li>
-                    </ul>
-                    <a href="#" class="primary-btn add-to-cart" data-server-id="2">رزرو</a>
-                </div>
-            </div>
-
-            <!-- پلن 3 -->
-            <div class="col-lg-3 col-sm-6">
-                <div class="pricing__item">
-                    <h4>پلن قدرتمند</h4>
-                    <h5>۱۴۴,۰۰۰ روزانه / تومان</h5>
-                    <ul>
-                        <li>۴۰ هسته پردازشی منطقی</li>
-                        <li>۶۰ گیگابایت رم</li>
-                        <li>۴۰۰ گیگابایت فضای HDD</li>
-                        <li>مناسب تحلیل‌های پیچیده</li>
-                    </ul>
-                    <a href="#" class="primary-btn add-to-cart" data-server-id="3">رزرو</a>
-                </div>
-            </div>
-
-            <!-- پلن 4 -->
-            <div class="col-lg-3 col-sm-6">
-                <div class="pricing__item">
-                    <h4>پلن فوق‌سنگین</h4>
-                    <h5>۲۸۸,۰۰۰ روزانه / تومان</h5>
-                    <ul>
-                        <li>۸۰ هسته پردازشی منطقی</li>
-                        <li>۱۲۰ گیگابایت رم</li>
-                        <li>۴۰۰ گیگابایت فضای HDD</li>
-                        <li>برای پروژه‌های صنعتی و علمی</li>
-                    </ul>
-                    <a href="#" class="primary-btn add-to-cart" data-server-id="4">رزرو</a>
-                </div>
-            </div>
+                index++;
+            }
         </div>
 
         <div class="row yearly__plans">
-            <!-- پلن GPU 1 -->
-            <div class="col-lg-3 col-sm-6">
-                <div class="pricing__item">
-                    <h4>پلن پایه</h4>
-                    <h5>۴۰۰,۰۰۰ روزانه / تومان</h5>
-                    <ul>
-                        <li>پردازش گرافیکی RTX 2080Ti</li>
-                        <li>مناسب پردازش تصویر، ویدیو و مدل‌های ML</li>
-                        <li>سرعت و کارایی بالا برای پروژه‌های متوسط</li>
-                    </ul>
-                    <a href="#" class="primary-btn add-to-cart" data-server-id="5">رزرو</a>
+            @{
+                int indexGPU = 0;
+            }
+            @foreach (var server in Model.GPUServers)
+            {
+                var isPopular = indexGPU == 2 ? " popular" : "";
+                <div class="col-lg-3 col-sm-6">
+                    <div class="pricing__item @isPopular">
+                        @if (indexGPU == 2)
+                        {
+                            <div class="popular-badge">
+                                <span class="badge-text">پرفروش‌ترین</span>
+                                <span class="badge-icon flame-icon">🔥</span>
+                            </div>
+                        }
+                        <h4>@server.Name</h4>
+                        <h5>@server.DailyPrice.ToString("N0") تومان (روزانه)</h5>
+                        <ul>
+                            @if (!string.IsNullOrEmpty(server.GpuType) && server.GpuType != "-")
+                            {
+                                <li>پردازنده گرافیکی: @(server.GpuType)</li>
+                            }
+                            @if (server.GpuCount > 0)
+                            {
+                                <li>تعداد پردازنده گرافیکی: @(server.GpuCount)</li>
+                            }
+                            @if (server.Cores > 0)
+                            {
+                                <li>پردازنده: @(server.Cores) هسته</li>
+                            }
+                            @if (server.RamGB > 0)
+                            {
+                                <li>حافظه رم: @(server.RamGB) گیگابایت</li>
+                            }
+                            @if (server.StorageGB > 0)
+                            {
+                                <li>ذخیره‌سازی: @(server.StorageGB) گیگابایت</li>
+                            }
+                            @if (!string.IsNullOrEmpty(server.Uptime) && server.Uptime != "-")
+                            {
+                                <li>آپتایم: @server.Uptime</li>
+                            }
+                            @if (!string.IsNullOrEmpty(server.DeliveryTime) && server.DeliveryTime != "-")
+                            {
+                                <li>زمان تحویل: @server.DeliveryTime</li>
+                            }
+                            @if (!string.IsNullOrEmpty(server.ProcessingSpeed) && server.ProcessingSpeed != "-")
+                            {
+                                <li>سرعت پردازش: @server.ProcessingSpeed</li>
+                            }
+                            @if (!string.IsNullOrEmpty(server.SuitableFor) && server.SuitableFor != "-")
+                            {
+                                <li>مناسب برای: @server.SuitableFor</li>
+                            }
+                        </ul>
+                        <a href="#" class="primary-btn add-to-cart" data-server-id="@server.Id">رزرو</a>
+                    </div>
                 </div>
-            </div>
-
-            <!-- پلن GPU 2 -->
-            <div class="col-lg-3 col-sm-6">
-                <div class="pricing__item">
-                    <h4>پلن حرفه‌ای</h4>
-                    <h5>۶۰۰,۰۰۰ روزانه / تومان</h5>
-                    <ul>
-                        <li>پردازش گرافیکی RTX 3090</li>
-                        <li>قدرت بی‌نظیر در پردازش‌های سنگین</li>
-                        <li>مناسب یادگیری عمیق، هوش مصنوعی</li>
-                    </ul>
-                    <a href="#" class="primary-btn add-to-cart" data-server-id="6">رزرو</a>
-                </div>
-            </div>
-
-            <!-- پلن Tesla A100 (۴۰GB) -->
-            <div class="col-lg-3 col-sm-6">
-                <div class="pricing__item">
-                    <h4>پلن قدرتمند</h4>
-                    <h5>۱,۰۰۰,۰۰۰ روزانه / تومان</h5>
-                    <ul>
-                        <li>Tesla A100 (۴۰GB)</li>
-                        <li>۷۰ هسته CPU منطقی</li>
-                        <li>۳۶۰ گیگابایت رم</li>
-                        <li>۱ ترابایت فضای ذخیره‌سازی</li>
-                        <li>مناسب برای پروژه‌های یادگیری ماشین پیشرفته و محاسبات سنگین</li>
-                    </ul>
-                    <a href="#" class="primary-btn add-to-cart" data-server-id="7">رزرو</a>
-                </div>
-            </div>
-
-            <!-- پلن Tesla A100 (۸۰GB) -->
-            <div class="col-lg-3 col-sm-12">
-                <div class="pricing__item highlight">
-                    <h4>پلن فوق‌سنگین</h4>
-                    <h5>۱,۸۰۰,۰۰۰ روزانه / تومان</h5>
-                    <ul>
-                        <li>Tesla A100 (۸۰GB)</li>
-                        <li>۱۴۰ هسته CPU منطقی</li>
-                        <li>۷۶۰ گیگابایت رم</li>
-                        <li>۲ ترابایت فضای ذخیره‌سازی</li>
-                        <li>ایده‌آل برای پروژه‌های پیشرفته هوش مصنوعی و یادگیری ماشین</li>
-                    </ul>
-                    <a href="#" class="primary-btn add-to-cart" data-server-id="8">رزرو</a>
-                </div>
-            </div>
+                indexGPU++;
+            }
         </div>
     </div>
 </section>
-<!-- Pricing Section End -->
-<!-- Services Section Begin -->
-<!-- Pricing Section End -->
+
 <!-- Services Section Begin -->
 <section class="services-section spad">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-title">
-                    <h3> چرا مشتریان  ما رو انتخاب میکنند</h3>
+                    <h3>چرا مشتریان ما رو انتخاب می‌کنند</h3>
                 </div>
             </div>
         </div>
@@ -238,7 +232,7 @@
             </div>
             <div class="col-lg-4 col-md-4 col-sm-6">
                 <div class="services__item">
-                    <h5>محاسبه هزینه به صورت ساعتی</h5>
+                    <h5>محاسبه هزینه به‌صورت ساعتی</h5>
                     <span>پرداخت منعطف</span>
                     <p>فقط به اندازه‌ی مصرف واقعی پرداخت کنید</p>
                 </div>
@@ -276,8 +270,6 @@
 </section>
 <!-- Services Section End -->
 <!-- بخش دستاوردها -->
-<!-- Services Section End -->
-<!-- بخش دستاوردها -->
 <section class="achievement-section set-bg spad" data-setbg="/static/img/achievement-bg.jpg">
     <div class="container">
         <div class="row">
@@ -297,7 +289,7 @@
             </div>
             <div class="col-lg-3 col-md-3 col-sm-6">
                 <div class="achievement__item">
-                    <span class="fa fa-clone"></span>
+                    <span class="fa fa-check"></span>
                     <h2 class="achieve-counter">50</h2>
                     <p>سرورهای راه‌اندازی‌شده کمتر از ۵ دقیقه</p>
                 </div>
@@ -326,10 +318,10 @@
                         <div class="col-lg-6">
                             <div class="work__item">
                                 <i class="fa fa-bolt"></i>
-                                <span>بدون معطلی، آماده‌ی شروع</span>
+                                <span>بدون معطلی، جدول</span>
                                 <h3>سرور خود را در لحظه بسازید</h3>
                                 <p>
-                                    با چند کلیک ساده، سرور دلخواه‌تان را انتخاب و در کمتر از ۶۰ ثانیه راه‌اندازی کنید دیگر نیازی به تنظیمات پیچیده یا انتظار طولانی نیست
+                                    با چند کلیک ساده، سرور دلخواه‌تان را انتخاب و در کمتر از ۶۰ ثانیه راه‌اندازی کنید
                                 </p>
                                 <a href="#" class="primary-btn">جزئیات بیشتر</a>
                             </div>
@@ -340,7 +332,7 @@
                                 <span>سرورهای تخصصی برای هوش مصنوعی و تحلیل داده</span>
                                 <h3>زیرساخت محاسباتی ویژه</h3>
                                 <p>
-                                    سرورهایی با پردازش سریع، محاسبه هزینه به‌صورت ساعتی و پشتیبانی تخصصی، مناسب برای مدل های هوش مصنوعی و انواع پردازش های سنگین
+                                    سرورهایی با پردازش سریع، محاسبه هزینه به‌صورت ساعتی و پشتیبانی تخصصی، مناسب برای مدل‌های هوش مصنوعی و انواع پردازش‌های سنگین
                                 </p>
                                 <a href="#" class="primary-btn">اطلاعات بیشتر</a>
                             </div>
@@ -352,7 +344,7 @@
     </div>
 </section>
 <!-- پایان بخش نحوه کار -->
-<!-- بخش انتخاب پلن -->
+<!-- انتخاب پلن بخش -->
 <section class="choose-plan-section spad">
     <div class="container">
         <div class="row">
@@ -369,7 +361,6 @@
                         <li>پشتیبانی ۲۴ ساعته و تخصصی <span class="fa fa-check"></span></li>
                         <li>راه‌اندازی سریع و بدون نیاز به تنظیمات پیچیده <span class="fa fa-check"></span></li>
                         <li>مناسب برای مدل‌های هوش مصنوعی و داده‌کاوی <span class="fa fa-check"></span></li>
-
                     </ul>
                     <a href="#" class="primary-btn">همین حالا شروع کنید</a>
                 </div>

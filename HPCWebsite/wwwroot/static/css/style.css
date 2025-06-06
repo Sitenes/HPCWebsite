@@ -787,7 +787,7 @@ ol {
         display: inline-block;
         padding: 12px 30px 12px;
         border-radius: 50px;
-        margin-right: -4px;
+        margin-right: 5px;
         position: relative;
         top: 2px;
         left: 2px;
@@ -819,7 +819,7 @@ ol {
 .pricing__item {
     text-align: center;
     padding-bottom: 20px;
-    padding-top: 22px;
+    padding-top: 40px;
     background: #ffffff;
     padding-left: 20px;
     padding-right: 20px;
@@ -1195,7 +1195,7 @@ ol {
         position: relative;
     }
 
-       /* .breadcrumb__option a:after {
+        /* .breadcrumb__option a:after {
             position: absolute;
             right: -18px;
             top: 0;

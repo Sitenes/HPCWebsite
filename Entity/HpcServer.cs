@@ -37,8 +37,8 @@ namespace Entity
 
     public enum ServerType
     {
-        CPU = 1,
-        GPU = 2
+        CPU = 0,
+        GPU = 1
     }
     
     public class ServerCategory

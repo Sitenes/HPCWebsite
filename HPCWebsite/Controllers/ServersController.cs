@@ -24,8 +24,8 @@ namespace HPCWebsite.Controllers
         {
             try
             {
-                var categories = await _serverService.GetServerCategoriesAsync();
-                return View(categories);
+               
+                return View();
             }
             catch (Exception ex)
             {

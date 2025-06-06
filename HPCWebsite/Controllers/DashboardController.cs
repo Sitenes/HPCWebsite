@@ -1,11 +1,15 @@
 ﻿using Entity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Identity.Client;
 using Service;
 using System.Security.Claims;
+using Tools.AuthoraizationTools;
 using ViewModel;
+using ViewModels;
 
 namespace HPCWebsite.Controllers
 {
@@ -50,8 +54,22 @@ namespace HPCWebsite.Controllers
             }
 
             // دریافت سرورهای کاربر از سرویس
-            var userServers = await _serverRentalService.GetUserServersAsync(userId);
+            var userServers = await _serverRentalService.GetUserOrdersAsync(userId);
             return View(userServers);
+
+        }
+        public async Task<ResultViewModel<List<HpcServerRentalOrder>>> GetServerRentalsApi()
+        {
+            var dashboardUserId = 0;
+            TokenGenerator TokenGeneratorService = new TokenGenerator();
+            var tokenAuthorization = HttpContext.Request.Headers["Authorization"].ToString();
+            var claimsAuthorization = TokenGeneratorService.ValidateToken(tokenAuthorization, false, false);
+            dashboardUserId = int.Parse(claimsAuthorization.FindFirstValue("UserId"));
+
+            var user = await _userManager.GetByDashboardUserIdAsync(dashboardUserId);
+
+            var userServers = await _serverRentalService.GetUserOrdersAsync(user.Id);
+            return new ResultViewModel<List<HpcServerRentalOrder>>(userServers,userServers.Count, userServers.Count, 1);
 
         }
         public IActionResult ServerInfo()

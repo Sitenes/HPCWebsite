@@ -15,6 +15,7 @@ namespace Entity
         [ForeignKey(nameof(UserId))]
         public HpcUser? User { get; set; }
         public List<HpcCartItem> Items { get; set; } = new List<HpcCartItem>();
+        public List<HpcPayment> Payments { get; set; } = [];
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
 

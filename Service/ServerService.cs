@@ -1,11 +1,9 @@
-﻿
-using DataLayer;
+﻿using DataLayer;
 using Entity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Logging;
 using DataLayer.DbContext;
 
@@ -16,7 +14,6 @@ namespace Service
         Task<HpcServer> GetServerByIdAsync(int id);
         Task<List<HpcServer>> GetAllServersAsync();
         Task<List<HpcServer>> GetServersByTypeAsync(ServerType type);
-        Task<List<ServerCategory>> GetServerCategoriesAsync();
         Task<HpcServer> CreateServerAsync(HpcServer server, int dashboardUserId);
         Task<HpcServer> UpdateServerAsync(HpcServer server);
         Task<bool> DeleteServerAsync(int id);
@@ -24,6 +21,7 @@ namespace Service
         Task<bool> IsServerAvailableAsync(int serverId);
         Task<decimal> CalculateRentalPriceAsync(int serverId, int rentalDays);
     }
+
     public class ServerService : IServerService
     {
         private readonly DynamicDbContext _context;
@@ -48,14 +46,12 @@ namespace Service
             try
             {
                 var cacheKey = $"server_{id}";
-                var server = await _cacheService.GetOrCreateAsync(cacheKey, async () =>
+                return await _cacheService.GetOrCreateAsync(cacheKey, async () =>
                 {
                     return await _context.HpcServers
                         .AsNoTracking()
                         .FirstOrDefaultAsync(s => s.Id == id);
                 }, TimeSpan.FromMinutes(30));
-
-                return server;
             }
             catch (Exception ex)
             {
@@ -103,46 +99,16 @@ namespace Service
             }
         }
 
-        public async Task<List<ServerCategory>> GetServerCategoriesAsync()
+        public async Task<HpcServer> CreateServerAsync(HpcServer server, int dashboardUserId)
         {
             try
             {
-                var cacheKey = "server_categories";
-                return await _cacheService.GetOrCreateAsync(cacheKey, async () =>
+                var workflowUser = new Entities.Models.Workflows.Workflow_User
                 {
-                    var categories = new List<ServerCategory>
-                {
-                    new ServerCategory
-                    {
-                        Name = "پلن‌های CPU",
-                        Description = "سرورهای پردازشی با قدرت محاسباتی بالا",
-                        IconClass = "flaticon-003-network",
-                        Servers = await GetServersByTypeAsync(ServerType.CPU)
-                    },
-                    new ServerCategory
-                    {
-                        Name = "پلن‌های GPU",
-                        Description = "سرورهای پردازش گرافیکی و هوش مصنوعی",
-                        IconClass = "flaticon-030-server-1",
-                        Servers = await GetServersByTypeAsync(ServerType.GPU)
-                    }
+                    WorkflowId = 1,
+                    UserId = dashboardUserId
                 };
 
-                    return categories;
-                }, TimeSpan.FromHours(2));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting server categories");
-                throw;
-            }
-        }
-
-        public async Task<HpcServer> CreateServerAsync(HpcServer server,int dashboardUserId)
-        {
-            try
-            {
-                var workflowUser = new Entities.Models.Workflows.Workflow_User { WorkflowId = 1, UserId = dashboardUserId };
                 await _basicContext.Workflow_User.AddAsync(workflowUser);
                 await _context.SaveChangesAsync();
                 server.WorkflowUserId = workflowUser.Id;
@@ -150,9 +116,8 @@ namespace Service
                 await _context.HpcServers.AddAsync(server);
                 await _context.SaveChangesAsync();
 
-                // Clear relevant caches
                 await _cacheService.RemoveAsync($"servers_{server.Type}");
-                await _cacheService.RemoveAsync("server_categories");
+                await _cacheService.RemoveAsync($"server_{server.Id}");
 
                 return server;
             }
@@ -176,11 +141,9 @@ namespace Service
 
                 await _context.SaveChangesAsync();
 
-                // Clear relevant caches
                 await _cacheService.RemoveAsync($"server_{server.Id}");
                 await _cacheService.RemoveAsync($"servers_{server.Type}");
-                await _cacheService.RemoveAsync($"servers_{existingServer.Type}"); // In case type changed
-                await _cacheService.RemoveAsync("server_categories");
+                await _cacheService.RemoveAsync($"servers_{existingServer.Type}");
 
                 return existingServer;
             }
@@ -202,10 +165,8 @@ namespace Service
                 _context.HpcServers.Remove(server);
                 await _context.SaveChangesAsync();
 
-                // Clear relevant caches
                 await _cacheService.RemoveAsync($"server_{id}");
                 await _cacheService.RemoveAsync($"servers_{server.Type}");
-                await _cacheService.RemoveAsync("server_categories");
 
                 return true;
             }
@@ -238,9 +199,7 @@ namespace Service
         {
             try
             {
-                // اینجا می‌توانید منطق بررسی موجودیت سرور را پیاده‌سازی کنید
-                // مثلاً بررسی کنید که چند سرور از این نوع در حال استفاده هستند
-                return true; // برای سادگی فعلی همیشه true برمی‌گردانیم
+                return true;
             }
             catch (Exception ex)
             {
@@ -257,11 +216,7 @@ namespace Service
                 if (server == null)
                     throw new Exception("Server not found");
 
-                // محاسبه قیمت با در نظر گرفتن تخفیف‌های احتمالی
                 decimal basePrice = server.DailyPrice * rentalDays;
-
-                // در اینجا می‌توانید منطق تخفیف‌ها را اضافه کنید
-                // مثلاً تخفیف برای اجاره‌های بلندمدت
 
                 return basePrice;
             }
@@ -271,6 +226,5 @@ namespace Service
                 throw;
             }
         }
-
     }
 }
