@@ -64,9 +64,7 @@ namespace Service
         {
             if (!await IsMobileUniqueAsync(user.Mobile) || await _context.User.AnyAsync(x => x.UserName == user.Mobile.ToString()))
                 throw new InvalidOperationException("شماره موبایل تکراری است");
-
             
-
             user.CreatedAt = DateTime.Now;
             var dashboardUser = new Entities.Models.MainEngine.User
             {

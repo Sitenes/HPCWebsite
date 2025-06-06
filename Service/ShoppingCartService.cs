@@ -59,8 +59,8 @@ namespace Service
         }
         public async Task<HpcTempUserServer> GetTempUserServer(int userId)
         {
-            var cart = await _context.HpcTempUserServers.FirstOrDefaultAsync(x => x.UserId == userId);
-            _context.HpcTempUserServers.Remove(cart);
+            var cart = await _context.HpcTempUserServers.OrderByDescending(x=>x.Id).FirstOrDefaultAsync(x => x.UserId == userId);
+            //_context.HpcTempUserServers.Remove(cart);
             return cart;
         }
         public async Task<HpcCartItem> GetLastCartItemOfUserAsync(int userId)
@@ -90,7 +90,7 @@ namespace Service
             {
                 var workflowUser = new Entities.Models.Workflows.Workflow_User { WorkflowId = 1, UserId = dashboardUserId };
                 await _basicContext.Workflow_User.AddAsync(workflowUser);
-                await _context.SaveChangesAsync();
+                await _basicContext.SaveChangesAsync();
                 var wkID = workflowUser.Id;
                 existingItem = new HpcCartItem
                 {

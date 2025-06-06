@@ -153,10 +153,9 @@ namespace HPCWebsite.Controllers
                 dashboardUserId = int.Parse(claimsAuthorization.FindFirstValue("UserId"));
                 var user = await _userService.GetByDashboardUserIdAsync(dashboardUserId);
 
-                var tempItem = await _shoppingCartService.GetTempUserServer(user.Id);
+                var tempItem = await _shoppingCartService.GetTempUserServer(dashboardUserId);
                 
                 var cart = await _shoppingCartService.AddToCartAsync(user.Id, tempItem.ServerId,1, dashboardUserId);
-
 
                 return new ResultViewModel<HpcCartItem>(cart);
             }

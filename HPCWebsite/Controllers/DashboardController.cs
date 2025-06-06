@@ -191,6 +191,7 @@ namespace HPCWebsite.Controllers
             return RedirectToAction("Checkout");
         }
 
+
         [HttpGet]
         public async Task<IActionResult> PaymentCallback(string authority, string status = "OK")
         {
@@ -223,9 +224,20 @@ namespace HPCWebsite.Controllers
                                 item.RentalDays,
                                 int.Parse(User.FindFirstValue(ClaimTypes.Name) ?? "1")
                             );
-
                             orders.Add(order);
                         }
+                    }
+
+                    var paymentCallbackService = HttpContext.RequestServices.GetRequiredService<PaymentCallbackService>();
+
+                    foreach (var order in orders)
+                    {
+                        var thread = new Thread(async () =>
+                        {
+                            await paymentCallbackService.ProcessOrderAsync(order);
+                        });
+                        thread.IsBackground = true;
+                        thread.Start();
                     }
 
                     return View("PaymentSuccess", new PaymentSuccessViewModel
@@ -242,6 +254,5 @@ namespace HPCWebsite.Controllers
                 Message = "پرداخت با خطا مواجه شد"
             });
         }
-
     }
 }

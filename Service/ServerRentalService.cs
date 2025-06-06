@@ -73,7 +73,7 @@ namespace Service
             };
             var workflowUser = new Entities.Models.Workflows.Workflow_User { WorkflowId = 1, UserId = dashboardUserId };
             await _basicContext.Workflow_User.AddAsync(workflowUser);
-            await _context.SaveChangesAsync();
+            await _basicContext.SaveChangesAsync();
             order.WorkflowUserId = workflowUser.Id;
 
             await _context.HpcServerRentalOrders.AddAsync(order);
