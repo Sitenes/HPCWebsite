@@ -25,6 +25,7 @@ namespace Entity
         public bool HasRootAccess { get; set; }
         public string SupportLevel { get; set; }
         public string Uptime { get; set; }
+        public string OpenstackFlavorName { get; set; }
         public string DeliveryTime { get; set; }
         public bool IsPopular { get; set; }
         public string SuitableFor { get; set; } // فیلد جدید

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Service;
+using System.Reflection.PortableExecutable;
 using ViewModel;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,7 +59,15 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseCors(builder =>
+{
+    // تنظیمات CORS در محیط Development
+    builder
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowAnyOrigin();
 
+});
 app.UseHttpsRedirection();
 app.UseRouting();
 
