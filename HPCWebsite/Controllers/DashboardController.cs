@@ -228,7 +228,7 @@ namespace HPCWebsite.Controllers
                         }
                     }
 
-                    var paymentCallbackService = HttpContext.RequestServices.GetRequiredService<PaymentCallbackService>();
+                    var paymentCallbackService = HttpContext.RequestServices.GetRequiredService<OpenStackService>();
 
                     foreach (var order in orders)
                     {

@@ -10,8 +10,8 @@ using DataLayer.DbContext;
 using Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Newtonsoft.Json;
+using ViewModels;
 
 public class TokenResponse
 {
@@ -32,7 +32,7 @@ public class ApiResponseModel
     public string UserId { get; set; }
 }
 
-public class PaymentCallbackService
+public class OpenStackService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IServiceScopeFactory _scopeFactory;
@@ -40,7 +40,7 @@ public class PaymentCallbackService
     private string _accessToken;
     private DateTime _tokenExpiry;
 
-    public PaymentCallbackService(IHttpClientFactory httpClientFactory, IServiceScopeFactory scopeFactory, IConfiguration configuration)
+    public OpenStackService(IHttpClientFactory httpClientFactory, IServiceScopeFactory scopeFactory, IConfiguration configuration)
     {
         _httpClientFactory = httpClientFactory;
         _scopeFactory = scopeFactory;
@@ -56,16 +56,16 @@ public class PaymentCallbackService
             return _accessToken;
         }
 
-        using var client = _httpClientFactory.GetHttpClient();
-        var loginUrl = _configuration["ApiSettings:BaseUrl"] + "/api/login/admin";
-        var loginData = new { password = _configuration["ApiSettings:Password"] };
+        using var client = _httpClientFactory.CreateClient();
+        var loginUrl = _configuration["Urls:OpenstackAutomator"] + $"/api/Authentication/login/{_configuration["OpenstackAutomatorApiUser:Username"]}";
+        var loginData = _configuration["OpenstackAutomatorApiUser:Password"];
         var content = new StringContent(JsonConvert.SerializeObject(loginData), Encoding.UTF8, "application/json");
 
         var response = await client.PostAsync(loginUrl, content);
         response.EnsureSuccessStatusCode();
 
-        var tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(await response.Content.ReadAsStringAsync());
-        _accessToken = tokenResponse.AccessToken;
+        var tokenResponse = JsonConvert.DeserializeObject<ResultViewModel<TokenResponse>>(await response.Content.ReadAsStringAsync());
+        _accessToken = tokenResponse.Data.AccessToken;
         _tokenExpiry = DateTime.UtcNow.AddMinutes(15);
         return _accessToken;
     }
@@ -77,15 +77,15 @@ public class PaymentCallbackService
             using var scope = _scopeFactory.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<DynamicDbContext>(); // Replace with your actual DbContext
 
-            var client = _httpClientFactory.GetHttpClient();
+            var client = _httpClientFactory.CreateClient();
             var token = await GetValidTokenAsync();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var apiUrl = _configuration["ApiSettings:BaseUrl"] + "/api/CreateCPUVM";
-            var requestData = new { flavor = order.ServerSpecs }; // Assuming ServerSpecs contains the flavor data
-            var content = new StringContent(JsonConvert.SerializeObject(requestData), Encoding.UTF8, "application/json");
-
-            var response = await client.PostAsync(apiUrl, content);
+            var apiUrl = _configuration["Urls:OpenstackAutomator"] + "/api/command/CreateCPUVM?";
+            apiUrl += "flavor=" + order.Server.OpenstackFlavorName;
+            apiUrl += "&imageOS=" + _configuration["OpenstackAutomatorApiUser:DefaultOSImage"];
+          
+            var response = await client.GetAsync(apiUrl);
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
@@ -125,7 +125,7 @@ public class PaymentCallbackService
                 UserId = order.UserId,
                 StartDate = order.StartDate,
                 EndDate = order.EndDate,
-                Status = Enum.Parse<OrderStatus>(apiResponse.Status, true),
+                Status = OrderStatus.Completed,
                 ServerId = order.ServerId,
                 ServerName = apiResponse.Name,
                 ServerSpecs = apiResponse.Flavor,

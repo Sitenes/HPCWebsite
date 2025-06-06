@@ -24,7 +24,7 @@ namespace Service
         private readonly IServerService _serverService;
         private readonly Context _basicContext;
 
-        public ServerRentalService(DynamicDbContext context, IServerService serverService,Context basicContext)
+        public ServerRentalService(DynamicDbContext context, IServerService serverService, Context basicContext)
         {
             _context = context;
             _serverService = serverService;
@@ -69,7 +69,7 @@ namespace Service
                 ServerSpecs = server.Specifications,
                 StartDate = DateTime.Now,
                 EndDate = DateTime.Now.AddDays(rentalDays),
-                Status = OrderStatus.Pending
+                Status = OrderStatus.Pending,
             };
             var workflowUser = new Entities.Models.Workflows.Workflow_User { WorkflowId = 1, UserId = dashboardUserId };
             await _basicContext.Workflow_User.AddAsync(workflowUser);
@@ -79,6 +79,7 @@ namespace Service
             await _context.HpcServerRentalOrders.AddAsync(order);
             await _context.SaveChangesAsync();
 
+            order.Server = server;
             return order;
         }
 

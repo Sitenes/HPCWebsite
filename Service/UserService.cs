@@ -31,7 +31,7 @@ namespace Service
         private readonly ICacheService _cacheService;
         private readonly Context _basicContext;
 
-        public UserService(DynamicDbContext context, ISmsService smsService, ICacheService cacheService,Context basicContext)
+        public UserService(DynamicDbContext context, ISmsService smsService, ICacheService cacheService, Context basicContext)
         {
             _context = context;
             _smsService = smsService;
@@ -64,12 +64,12 @@ namespace Service
         {
             if (!await IsMobileUniqueAsync(user.Mobile) || await _context.User.AnyAsync(x => x.UserName == user.Mobile.ToString()))
                 throw new InvalidOperationException("شماره موبایل تکراری است");
-            
+
             user.CreatedAt = DateTime.Now;
             var dashboardUser = new Entities.Models.MainEngine.User
             {
                 Name = user.FirstName + " " + user.LastName,
-                UserName = user.Mobile.ToString()
+                UserName = "0" + user.Mobile.ToString()
             };
             await _context.User.AddAsync(dashboardUser);
             await _context.SaveChangesAsync();
@@ -82,14 +82,14 @@ namespace Service
             await _basicContext.SaveChangesAsync();
             user.WorkflowUserId = workflowUser.Id;
             await _context.SaveChangesAsync();
-            
+
             return user;
         }
 
         public async Task<HpcUser> UpdateAsync(HpcUser user)
         {
             user.UpdatedAt = DateTime.UtcNow;
-            var dashboardUser = await _context.User.FirstOrDefaultAsync(x=>x.Id == user.UserId);
+            var dashboardUser = await _context.User.FirstOrDefaultAsync(x => x.Id == user.UserId);
             dashboardUser.Name = user.FirstName + " " + user.LastName;
             _context.HpcUsers.Update(user);
             return user;
@@ -130,9 +130,9 @@ namespace Service
 
             //if (!cachedCode.IsNullOrEmpty() && cachedCode == code)
             //{
-                user.IsMobileVerified = true;
-                await UpdateAsync(user);
-                return true;
+            user.IsMobileVerified = true;
+            await UpdateAsync(user);
+            return true;
             //}
 
             return false;

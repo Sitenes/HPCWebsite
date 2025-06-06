@@ -45,13 +45,9 @@ namespace Service
         {
             try
             {
-                var cacheKey = $"server_{id}";
-                return await _cacheService.GetOrCreateAsync(cacheKey, async () =>
-                {
-                    return await _context.HpcServers
-                        .AsNoTracking()
-                        .FirstOrDefaultAsync(s => s.Id == id);
-                }, TimeSpan.FromMinutes(30));
+                return await _context.HpcServers
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(s => s.Id == id);
             }
             catch (Exception ex)
             {
@@ -81,15 +77,12 @@ namespace Service
         {
             try
             {
-                var cacheKey = $"servers_{type}";
-                return await _cacheService.GetOrCreateAsync(cacheKey, async () =>
-                {
+              
                     return await _context.HpcServers
                         .AsNoTracking()
                         .Where(s => s.Type == type)
                         .OrderBy(s => s.DailyPrice)
                         .ToListAsync();
-                }, TimeSpan.FromHours(10));
             }
             catch (Exception ex)
             {
