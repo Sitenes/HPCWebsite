@@ -7553,7 +7553,7 @@ body.dark-mode *:hover::-webkit-scrollbar-thumb {
 }
 
 .dark-mode .side-header .header-brand-img.desktop-logo {
-    display: block !important;
+    display: none !important;
 }
 
 .dark-mode .side-header .header-brand-img.light-logo1 {
@@ -7634,7 +7634,7 @@ body.dark-mode *:hover::-webkit-scrollbar-thumb {
 
 @media (max-width: 991px) {
     .dark-mode .app-header.header .header-brand-img.desktop-logo {
-        display: block;
+        display: none;
     }
 }
 

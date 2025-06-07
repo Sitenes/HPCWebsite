@@ -1,4 +1,5 @@
 ﻿@using ViewModel
+@inject IConfiguration Configuration
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -150,12 +151,12 @@
 
             <!-- Action Buttons -->
             <div class="slide-up space-y-4" style="animation-delay: 0.6s;">
-                <button class="w-full bg-white text-purple-600 font-semibold py-4 px-6 rounded-2xl hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg">
-                    دانلود رسید
-                </button>
-                <button class="w-full bg-transparent border-2 border-white border-opacity-30 text-white font-semibold py-4 px-6 rounded-2xl hover:bg-white hover:bg-opacity-10 transition-all duration-300 transform hover:scale-105">
+                <a href="@Configuration["Urls:LoginRedirectUrl"]" class="w-full bg-white text-purple-600 font-semibold py-4 px-6 rounded-2xl hover:bg-opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    داشبورد کاربری
+                </a>
+                <a href="/" class="w-full bg-transparent border-2 border-white border-opacity-30 text-white font-semibold py-4 px-6 rounded-2xl hover:bg-white hover:bg-opacity-10 transition-all duration-300 transform hover:scale-105">
                     ادامه خرید
-                </button>
+                </a>
             </div>
 
             <!-- Footer Message -->
