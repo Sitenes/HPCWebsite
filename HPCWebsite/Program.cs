@@ -1,8 +1,11 @@
-﻿using DataLayer;
+﻿using AutomationEngine.CustomMiddlewares.Configuration;
+using AutomationEngine.CustomMiddlewares.Extensions;
+using DataLayer;
 using DataLayer.DbContext;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 using Service;
 using System.Reflection.PortableExecutable;
 using Tools.AuthoraizationTools;
@@ -24,6 +27,9 @@ builder.Services.AddDbContext<Context>(options =>
 //Update-Database InitialCreate -DbContext DynamicDbContext
 builder.Services.AddDbContext<DynamicDbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("DynamicAutomationEngine")));
+
+
+builder.Host.AddApplicationLogging(builder.Configuration);
 
 builder.Services.AddMemoryCache();
 builder.Services.AddTransient<ICacheService, CacheService>();
@@ -75,6 +81,10 @@ app.UseCors(builder =>
         .AllowAnyOrigin();
 
 });
+
+app.UseSerilogRequestLogging();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
