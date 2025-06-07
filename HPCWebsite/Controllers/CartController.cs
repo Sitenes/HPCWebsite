@@ -130,7 +130,7 @@ namespace HPCWebsite.Controllers
                 dashboardUserId = int.Parse(claimsAuthorization.FindFirstValue("UserId"));
                 var user = await _userService.GetByDashboardUserIdAsync(dashboardUserId);
 
-                await _shoppingCartService.UpdateCartItemAsync(user.Id, cartItemId, rentalDays);
+                await _shoppingCartService.UpdateCartItemAsync(user.Id, cartItemId, rentalDays, startDate);
 
                 return new ResultViewModel<object>(new { redirectUrl = Url.Action("Checkout", "Dashboard", null, Request.Scheme) });
             }

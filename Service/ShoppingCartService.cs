@@ -124,7 +124,7 @@ namespace Service
         public async Task UpdateCartItemAsync(int userId, int itemId, int rentalDays, DateTime? startDate)
         {
             var cart = await GetUserCartAsync(userId);
-            var item = cart.Items.FirstOrDefault(i => i.Id == itemId);
+            var item = cart.Items.FirstOrDefault(i => i.ServerId == itemId);
 
             if (item != null)
             {
