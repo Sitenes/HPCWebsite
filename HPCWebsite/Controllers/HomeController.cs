@@ -28,5 +28,9 @@ namespace HPCWebsite.Controllers
 
             return View(model);
         }
+        public async Task<IActionResult> Support()
+        {
+            return View();
+        }
     }
 }
